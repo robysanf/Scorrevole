@@ -1,0 +1,4 @@
+ #define SECRET_SSID     "SPINELLI"
+#define SECRET_PASS     "SPINELL1@SPINELL1"
+
+// -- CH 100
