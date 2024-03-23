@@ -165,7 +165,49 @@ void DualMC33926MotorShield::setM1Speed(int speed)
   else
     digitalWrite(_M1DIR,LOW);
 }
+/*//mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm
+void DualMC33926MotorShield::setM1Speed(int speed)
+{
+  unsigned char reverse = 0;
 
+  if (speed < 0)
+  {
+    speed = -speed;  // Make speed a positive quantity
+    reverse = 1;  // Preserve the direction
+  }
+  if (speed > 1200)  // Max PWM dutycycle
+    speed = 1200;
+
+ /* #ifdef DUALMC33926MOTORSHIELD_TIMER1_AVAILABLE
+    if (_M1PWM == _M1PWM_TIMER1_PIN && _M2PWM == _M2PWM_TIMER1_PIN)
+    {
+      OCR1A = speed;
+    }
+    else
+    {//questo viene usato per gli altri pin in cui non posso impostare la frequenza con il timer
+      analogWrite(_M1PWM,speed * 51 / 80); // map 400 to 255
+    }
+  #else
+    analogWrite(_M1PWM,speed * 51 / 80); // map 400 to 255
+  #endif
+  #ifdef DUALMC33926MOTORSHIELD_TIMERCC0_AVAILABLE
+    // Set the PWM signal to output speed duty cycle
+    REG_TCC0_CC2 = speed;         // TCC0 CC3 - on D10
+    while (TCC0->SYNCBUSY.bit.CC3);                // Wait for synchronization
+ 
+    // Divide the 48MHz signal by 1 giving 48MHz (20.83ns) TCC0 timer tick and enable the outputs
+    REG_TCC0_CTRLA |= TCC_CTRLA_PRESCALER_DIV1 |    // Divide GCLK4 by 1
+            TCC_CTRLA_ENABLE;             // Enable the TCC0 output
+    while (TCC0->SYNCBUSY.bit.ENABLE);              // Wait for synchronization
+
+  #endif
+
+  if (reverse)
+    digitalWrite(_M1DIR,HIGH);
+  else
+    digitalWrite(_M1DIR,LOW);
+}
+*/
 // Return motor 2 current value in milliamps.
 unsigned int DualMC33926MotorShield::getM2CurrentMilliamps()
 {

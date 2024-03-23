@@ -16,6 +16,7 @@ void che_faccio() {                                //Serial.println(" inizio che
   switch (str) {
     case 1111: // -- chiudo in set reset
       Serial.print("\n chiudo in set reset");
+      Stato_Anta[0] = 'F';
       set_reset_chiudo(); str = 0; Stato_Anta[0] = 'R';
       break;
     case 1112: // -- metto in freno
@@ -37,8 +38,6 @@ void che_faccio() {                                //Serial.println(" inizio che
     case 1116: // -- avvia il test dei limit e poi cominicia ad inviare la str_limit
       Serial.print("\n richiesta valori limit");
       set = 1 ;
-      //digitalWrite (RELAY1, LOW);//high
-      md.setM1Speed(0);
       str = 0;
       Stato_Anta[0] = 'F';
       break;
@@ -51,6 +50,20 @@ void che_faccio() {                                //Serial.println(" inizio che
       Serial.print("\n Set limit");
       setLimitCurve();
       str = 0;
+      break;
+      case 1119: 
+      Serial.print("\n alzata");
+      Stato_Anta[0] = 'F';
+      Alza_Anta();
+      break;
+      case 1120: 
+      Serial.println( " inizio controllo assorbimento continuo ");
+       if (str2 == "") {
+        str2 = "0";
+      }
+      int vel = str2.toInt();
+      controlla_assorbimento(vel);
+      stampa_assorbimento();
       break;
   }
   // }
@@ -89,8 +102,8 @@ String mm="";
       if (str2 == "") {
         str2 = "0";
       }
-      except = "1";//str2.substring(0,1);
-      mm = "100";//str2.substring(1);
+      except = str2.substring(0,1);
+      mm = str2.substring(1);
       WARD(1, except.toInt(), 0, mm.toInt()); 
       except="";
       mm="";
@@ -104,13 +117,14 @@ String mm="";
       Serial.print("\n IMPOSTO A ZERO IL POS");
       set_pos(); str = 0;
       break;
-      case 5555: 
-      Serial.print("\n cambia canale");
-      cambia_canale(str2);
-      break;
     case 7777: // -- PER INIZIARE IL SET RESET NON SERVE NON USATO
       Serial.print("\n RESET EMERGENZA");
       str = 0; str_emergenza = "";
+      Stato_Anta[0] = 'F'; 
+      break;
+    case 5555: 
+      Serial.print("\n cambia canale");
+      cambia_canale(str2);
       break;
 
     // ************ comandi per IMPOSTARE LE VARIABILI ***************************************
@@ -124,13 +138,13 @@ String mm="";
       str3 = str2.toInt() ;
       velocita_crocera_MAX = str3 / 100.00;
       // spazioRallenta = spazioRallenta_hold*(1+(velocita_crocera_MAX/50)); // mettere una variabile assoluta di riferimento
-      Serial.print(" velocita_crocera_MAX = "); Serial.println(velocita_crocera_MAX);
-      Serial.print(" spazioRallenta = "); Serial.println(spazioRallenta / imp);
+      Serial.print("\n velocita_crocera_MAX = "); Serial.print(velocita_crocera_MAX);
+      Serial.print("\n spazioRallenta = "); Serial.print(spazioRallenta / imp);
       break;
     case 3332: // -- PER CAMBIARE LA VELOCITA' MINIMA
       str3 = str2.toInt() ;
       velocita_crocera_MIN = str3 / 100.00;
-      Serial.print(" velocita_crocera_MIN = "); Serial.println(velocita_crocera_MIN);
+      Serial.print("\n velocita_crocera_MIN = "); Serial.print(velocita_crocera_MIN);
       break;
     case 3333: // -- PER CAMBIARE LA VELOCITA' IN COLLISIONE  OPEEN CLOSE FAAST SETT1
       str3 = str2.toInt() ;
@@ -139,16 +153,16 @@ String mm="";
       break;
     case 3334: // -- PER CAMBIARE LA DIREZIONE DEL MOTORE
       motore = str2.toInt();
-      Serial.print(" motore = "); Serial.println(motore);
+      Serial.print("\n motore = "); Serial.print(motore);
       break;
     case 3335: // -- PER CAMBIARE LA DIREZIONE DELL'ENCODER
       encoder = str2.toInt();
-      Serial.print(" encoder = "); Serial.println(encoder);
+      Serial.print("\n encoder = "); Serial.print(encoder);
       break;
     // -- OPPURE
     case 3336: // -- PER CAMBIARE IL VALORE DI ATTRITO
       attrito = str2.toFloat();
-      Serial.print(" attrito = "); Serial.println(attrito);
+      Serial.print("\n attrito = "); Serial.print(attrito);
       break;
     case 3337: // -- E' LIBERO
       //ritardo=str2.toFloat();
@@ -156,7 +170,7 @@ String mm="";
       break;
     case 3338: // -- PER CAMBIARE IL VALORE DI INERZIA
       inerzia = str2.toInt();
-      Serial.print(" inerzia = "); Serial.println(inerzia);
+      Serial.print("\n inerzia = "); Serial.print(inerzia);
       break;
     case 3339: // -- PER CAMBIARE IL VALORE DI PESO
       peso = str2.toInt();
@@ -167,15 +181,19 @@ String mm="";
       pos_aperto = str2.toInt();
       Serial.print("\n pos_aperto = "); Serial.print(pos_aperto);
       break;
-    case 3311: // -- PER SETTARE IL VALORE DI IMP
+    case 3311: // -- PER SETTARE IL VALORE DI POS_APERTO
       str3 = str2.toFloat() ;
       imp = str3 / 100.00;
       Serial.print("\n imp = "); Serial.print(imp);
       spazioRallenta = spazioRallenta_mm * imp;  
       quasiChiuso = quasiChiuso_mm * imp; 
       spazio_no_chk_vel = spazio_no_chk_vel_mm * imp;
-      imp_vel = ((1 / (imp / 8)) * 1000000);
   
+      break;
+   case 3312: // -- PER CAMBIARE LA VELOCITA' MINIMA
+      str3 = str2.toInt() ;
+      velocita_crocera_SET = str3 / 100.00;
+      Serial.print("\n velocita_crocera_MIN = "); Serial.print(velocita_crocera_MIN);
       break;
     case 3340: // -- PER SETTARE I LIMITI DELLA CURVA
       spacchetta_limit(str2);
@@ -184,14 +202,13 @@ String mm="";
   }
   str = 0; str2 = ""; str3 = 0.00;
 }
-
 void cambia_canale(String ch){
-     digitalWrite(HC12, LOW);
+     digitalWrite(11, LOW);
      delay(150);
       String s="AT+C"+ch;
       char lis[255];
       s.toCharArray(lis,255);
      Serial1.write(lis);
      delay(150);
-     digitalWrite(HC12, HIGH);
+     digitalWrite(11, HIGH);
   }

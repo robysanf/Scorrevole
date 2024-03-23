@@ -1,10 +1,9 @@
 //***************************************************
 #include "defines.h"
 #include "arduino_secrets.h"
-
 #include <SPI.h>
 #include <WiFiNINA.h>
-
+#include <WiFiUdp.h>
 #include <ArduinoOTA.h>
 
 //*************************************************
@@ -15,6 +14,8 @@
 
 DualMC33926MotorShield md;
 
+extern "C" char* sbrk(int incr);
+
 //************************************************************************
 ///////please enter your sensitive data in the Secret tab/arduino_secrets.h
 char ssid[] = SECRET_SSID;        // your network SSID (name)
@@ -23,31 +24,36 @@ int keyIndex = 0;                 // your network key Index number (needed only 
 int status = WL_IDLE_STATUS;
 unsigned int localPort = 2300 + atoi(sonoio); //61;      // local port to listen on
 char packetBuffer[255]; //buffer to hold incoming packet
-char  ReplyBuffer[70];       // a string to send back
+char  ReplyBuffer[255];       // a string to send back
 char hold_packet[255];
 IPAddress ip(192, 168, 81, atoi(sonoio)); //si usa se non ho il router che gli assegna lui IP
+IPAddress ipdns(192, 168, 8, 1);
+IPAddress ipgate(192, 168, 8, 1);
+IPAddress ipmask(255, 255, 255, 0);
 
 //**********************************************************************
 
 int led =  LED_BUILTIN;//pin 13 su 33 IOT
 
 void setup() {
-
-  pinMode(RELAY1, OUTPUT);
-  pinMode(HC12, OUTPUT);
+  pinMode(5, OUTPUT);
+  pinMode(11, OUTPUT);
+  pinMode(led, OUTPUT);       // set the LED pin mode
+  pinMode(A2, INPUT);         // VALORE DEL PIN PER CONTROLLO TENSIONE
+  pinMode(A7, INPUT_PULLUP);  // VALORE DEL PIN PER ANTA FINE CORSA BASSO
+  pinMode(A6, INPUT_PULLUP);  // VALORE DEL PIN PER ANTA FINE CORSA BASSO
   pinMode(2, INPUT_PULLUP);  //PIN ENCODER
   pinMode(3, INPUT_PULLUP);  //PIN ENCODER
+  digitalWrite(5, HIGH);
+  digitalWrite(11, HIGH);
   attachInterrupt(digitalPinToInterrupt(3), avanti_3, CHANGE);
   attachInterrupt(digitalPinToInterrupt(2), avanti_2, RISING);
   //***************************** INIZIALIZZO MOTORI
   md.init();
   Serial.begin(9600);
   Serial1.begin(9600);
-  delay(500);
+  delay(2000);
   Serial.println("Init Motore");
-  digitalWrite(RELAY1, LOW);//high
-  md.setM1Speed(0);
-  digitalWrite(HC12, HIGH);
   digitalWrite(4, HIGH);
   delay(2);
   md.setM2Speed(0);
@@ -58,7 +64,7 @@ void setup() {
   spazioRallenta = spazioRallenta * imp;
   quasiChiuso = quasiChiuso * imp;
   spazio_no_chk_vel = spazio_no_chk_vel * imp;
-  Stato_Alzata[0] = 'I';                    // -- SERVE PER FAR PARTIRE IL SET RESET RIDOTTO SUL MASTER
+  Stato_Alzata[0] = 'I';
   //************ IMPOSTAZIONI WIFI
   //************ SE SI USA ROUTING STATICO SUL ROUTER TOGLIERE COMMENTARE WIFI.CONFIG
   Serial.println("\nStart Client WiFiUdpSendReceiveString on " + String(BOARD_NAME));
@@ -66,61 +72,74 @@ void setup() {
   {
     Serial.println("Communication with WiFi module failed!");
     // don't continue
-    while (true);
+   // while (true);
   }
   String fv = WiFi.firmwareVersion();
-  WiFi.config(ip);//COMMENTARE SE ROUTING STATICO
+  WiFi.config(ip);//,ipdns,ipgate,ipmask);//COMMENTARE SE ROUTING STATICO
   if (fv < WIFI_FIRMWARE_LATEST_VERSION)
   {
     Serial.println("Please upgrade the firmware");
   }
-  while (status != WL_CONNECTED)                                            // attempt to connect to Wifi network:
-  {
-    Serial.print("setup Attempting to connect to SSID: "); Serial.println(ssid);
-    status = WiFi.begin(ssid, pass);                                        // Connect to WPA/WPA2 network. Change this line if using open or WEP network
-    delay(500);                                                            // wait 5 seconds for connection
-  }
+  // print your MAC address:
+  byte mac[6];
+  WiFi.macAddress(mac);
+  Serial.print("MAC address: ");
+  printMacAddress(mac);
+
+
   Serial.println("Connected to wifi");
   printWifiStatus();
   Serial.println("\nStarting connection to server...");
-                                                    // if you get a connection, report back via serial
-  //*******************************************************************
-  ArduinoOTA.begin(WiFi.localIP(), "Arduino", "password", InternalStorage);
+ 
+
 }
 
 void loop() {
-  if (micros() - T1 > 1 / imp * 200000) V_M = 0;
-  //**************************************************
-  ArduinoOTA.poll();
-  while (WiFi.status() != WL_CONNECTED) {
-    //ferma_WARD(7);
+  long tempo=micros();
+/*  while (WiFi.status() != WL_CONNECTED) {
+    ferma_WARD(7);
+    Udp.stop();
+    WiFi.end();
     WiFi.config(ip);
     Serial.print("Attempting to connect to SSID: ");
     Serial.println(ssid);
     status = WiFi.begin(ssid, pass);
     delay(500);
-  }
+    Udp.begin(localPort);
+    conteggio ++;
+    Serial.println("conteggio");
+  }*/
   //********* RICEVE I DATI DAL MASTER E INVIA LA STRINGA DI RISPOSTA CON LO STATO ALZATA, IL DIR, IL POS, E EVENTUALE EMERGENZA
   Ascolta_Master();
-  delay(7);
+  delay(5);
   //********** INTERPRETA LA STRINGA RICEVUTA ED ESEGUE IL RELATIVO COMANDO
   che_faccio();
   fai_media();
   //********** STAMPA LO STATO OGNI 50 GIRI
-  if (contatore > 50) {
-    Serial.print("velocita = "); Serial.println(V_M);
-    contatore = 0;
-  }
-  delay(7);
-  //********* CONTROLLA LA POSIZIONE E CAMBIA STATO_APERTO E STATO_CHIUSO E STATO ANTA A SECONDA DI DOVE SI TROVA
-  //********* FERMA QUANDO IN APERTURA IL POS >=POS_APERTO E DIR=1
-  //********* DECELERA QUANDO STATO_ANTA "V" O "C" DIR=1 (APRI)
-  //********* DECELERA QUANDO STATO_ANTA "L" DIR=-1 (CHIUDI)
 
-  //******** QUANDO IN MOVIMENTO CONTROLLA LA VELOCITA' AUMENTANDO O RIDUCENDO LA TENSIONE SUL MOTORE
-
+  delay(5);
+    delay(5);
   if (_Dir != 0) {
     controlla_velocita_WARD();
+    // -----------------------------------------------
+    // PASSO DA qua  e guardo il tempo
+    // se il tempo salvato in passato è piu vecchio di un secondo
+    if ( (millis() - check_time) > 1000 ) {
+      //   entro  controllo il movimento e salvo il tempo e il pos
+      check_time = millis();
+      int pos_dif = abs(check_pos_old - pos);
+      if ( pos_dif < 2.5 * imp ) { //  vuol dire 0,5 cm/sec
+        Serial.println("fermo per niente");
+        //Serial.print(" check_pos_old = "); Serial.println(check_pos_old);
+        Serial.print(" pos_dif = "); Serial.println(pos_dif);
+        ferma_WARD(30);
+        //devo avvisare il master che ho fermato qui
+        Stato_Anta[0] = 'S'; 
+        // fatto
+      }
+      check_pos_old = pos;
+    }
+    // -----------------------------------------------
   }
   if (_Dir == 0) {
     for (int ic = 0; ic < 20; ic++) {
@@ -131,34 +150,26 @@ void loop() {
   {
     check_pos();
   }
-  delay(7);
-
-  //******** QUANDO IN MOVIMENTO CONTROLLA L'ASSORBIMENTO DI CORRENTE DEL MOTORE E LANCIA EMERGENZA SE SUPERA LA SOGLIA DEL METODO LIMIT
-  if (  _Dir != 0 && limit()) {
+  delay(5);
+  if (  _Dir != 0 && limit_senza_curva()) {
     emergenza(66);
   }
-  delay(7);
-
+  delay(5);
+  tensione_batteria = map(analogRead(A2), 0, 4095, 0, 3300);
   contatore = contatore + 1 ;
+  //Serial.print("Tempo = ");Serial.println(micros()-tempo);
 }
 
 
 void printWifiStatus()
 {
-  // print the SSID of the network you're attached to:
-  stampa("SSID: ");
-  stampaACapo(WiFi.SSID());
-
-  // print your board's IP address:
   IPAddress ip = WiFi.localIP();
-  stampa("IP Address: ");
-  stampaACapo(String(ip));
-
-  // print the received signal strength:
+  Serial.print("IP Address: ");
+  Serial.println(ip);
+  Serial.print("WIFI STATUS: "); Serial.println(WiFi.status());
   long rssi = WiFi.RSSI();
-  stampa("signal strength (RSSI):");
-  stampa(String(rssi));
-  stampaACapo(" dBm");
+  Serial.print("signal strength (RSSI):");
+  Serial.println(rssi);
 }
 
 void stampaACapo(String s) {
@@ -169,4 +180,18 @@ void stampa(String s)
 #ifdef _Aprimi_DEBUG
   Serial.print(s);
 #endif
+}
+
+
+void printMacAddress(byte mac[]) {
+  for (int i = 5; i >= 0; i--) {
+    if (mac[i] < 16) {
+      Serial.print("0");
+    }
+    Serial.print(mac[i], HEX);
+    if (i > 0) {
+      Serial.print(":");
+    }
+  }
+  Serial.println();
 }

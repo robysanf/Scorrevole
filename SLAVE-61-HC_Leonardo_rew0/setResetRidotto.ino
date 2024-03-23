@@ -1,28 +1,39 @@
-void set_reset_chiudo() {
+void set_reset_chiudo() { // INIZIO IL SET:
+  // IMPOSTO TUTTE LE VARIABILI A 0
+  digitalWrite(4, HIGH); // ABILITA I MOTORI
+  md.setM2Speed(0);
+  Stato_Anta[0] = 'F';
+  if ( digitalRead(A7) == LOW || Stato_Alzata[0] != 'U') { //-- *****ATTENZIONE**** METTERE VARIABILE CON A7
+    Alza_Anta();
+    Serial.println("arrivato qui 1");
+  }
   velocita_crocera = 0 ;
   v_attuale = 0;
   iCrocera = 0;
   Stato_Anta[0] = 'V';
   //lento = 0;
-  _Dir = 0;
+  _Dir = -1;
   set = 0;
   //solopassaggio = false;
   porta_tutta_chiusa = false;
   porta_tutta_aperta = false;
-
-  //digitalWrite (RELAY1, HIGH);// TIRO SU IL DROPBOLT  LOW
-  
-  digitalWrite(4, HIGH); // ABILITA I MOTORI
-  md.setM1Speed(400);
+  digitalWrite(4, HIGH);            // ABILITA I MOTORI
   md.setM2Speed(0);
   int i = 0;
-  // ACCELERO
-  int pos_vecchio = 0;
+ 
   velocita_crocera = velocita_crocera_SET; // POTREI METTERE velocita_crocera_SET UGUALE ALLA velocita_crocera_MIN COSI' RISPARMIO UNA VARIABILE E MEMORIZZO LO SFORZO ALLA VELICITA' PIU BASSA
-  for ( i = -70; i >= -TopSpeed ; i = i - 1) {
+  for ( i = -70; i >= -TopSpeed; i = i - 1) {   // ACCELERO
     md.setM2Speed(i * motore);
-    //Serial.print("\n motore ="); Serial.print(motore);
     tensione = i + 1;
+    if (limit()) {
+      // -- QUI QUANDO L'ANTA E'CHIUSA INTERVIENE A FATICA DOPO I 1200(TopSpeed) PERCHE' ABBIAMO ALZATO TROPPO LA CURVA
+      // -- BISOGNEREBBE INTRODURRE UN CONTROLLO PESEUDO LEVOLCITA' PER DIRE CHE SE IL POS NON INCREMENTA
+      // -- L'ANTA E' FERMA E QUINDI NON HA SENSO SPINGERE FINO A 1200(TopSpeed)
+      Serial.println("limit acc reset chiudo stop");
+      ferma_WARD(30);
+
+      return;
+    }
     if (abs(i) > 850 && abs(pos - pos_vecchio ) <= 1 ) {
       // -- QUESTA POTREBBE ESSERE LA PESEUDO VELOCITA' PER CAPIRE CHE SE A 500(lo possiamo anche alzare)
       // -- NON CAMBIA IL POS ALLORA SIAMO BLOCCATI CONTRO IL FINECORSA
@@ -31,15 +42,9 @@ void set_reset_chiudo() {
       return;
     }
     pos_vecchio = pos;
-    if (limit()) {
-      Serial.println("limit acc reset chiudo stop");
-      ferma_WARD(30);
-
-      return;
-    }
     if  (crocera(1)) {
       Serial.print("\n RAGGIUNTA VELOCITà CROCERA , TENSIONE = ");
-      Serial.println(tensione);
+      Serial.print(tensione);
       break;
     }
     Ascolta_Master();
@@ -55,7 +60,7 @@ void set_reset_chiudo() {
   tensione = i;
   Stato_Anta[0] = 'V';
   int tempo_chiudi = 0;
-  pos_vecchio = 0;
+  pos_vecchio=0;
   while (true) {            // STO CHIUDENDO
     _Dir = -1;                    // MI SERVE PER IL CONTROLLO DELLA VELOCITA'
     delay(1);
@@ -73,12 +78,13 @@ void set_reset_chiudo() {
       delay(2000);
       break;
     }
-    if (tempo_chiudi > 11000) {
-      Serial.println(" stop tempo_chiudi < 11000");
+    if (tempo_chiudi > 9000) {
+      Serial.println(" stop tempo_chiudi < 6000");
       ferma_WARD(30);
       break;
     }
-    if (abs(pos - pos_vecchio ) <= 1 ) {
+      Serial.print("pos vecchio - pos = ");  Serial.println(abs(pos - pos_vecchio ));
+ if (abs(pos - pos_vecchio ) <= 1 ) {
       // -- QUESTA POTREBBE ESSERE LA PESEUDO VELOCITA' PER CAPIRE CHE SE A 500(lo possiamo anche alzare)
       // -- NON CAMBIA IL POS ALLORA SIAMO BLOCCATI CONTRO IL FINECORSA
       Serial.println("pos invariato reset chiudo stop");
@@ -86,7 +92,7 @@ void set_reset_chiudo() {
       break;
     }
     pos_vecchio = pos;
-
+    
     Ascolta_Master();
     if (str == 2221 || str == 2223 ) {
       Serial.print("PREMUTO PULSANTE stop set chiudo");
@@ -97,6 +103,7 @@ void set_reset_chiudo() {
     delay(5);
     tempo_chiudi++;
   }
+  // FATTO, TROVATA POSIZIONE 0
 }
 
 void set_reset_pos() {
@@ -107,13 +114,13 @@ void set_reset_pos() {
     delay(1);
   }
   //tensione = -300;
-  delay(150);
+  //delay(150);
   ferma_WARD(7);
   //tensione = 1;
   digitalWrite(4, LOW);
-  delay(10); // FORSE QUI FUNZIONA MEGLIO
+  delay(200); // FORSE QUI FUNZIONA MEGLIO
   pos = 0;
-  delay(100); // DEVO VALUTARE SE SERVE
+  //delay(500); // DEVO VALUTARE SE SERVE
   digitalWrite(4, HIGH);
   Serial.print("TROVATA POSIZIONE ZERO");
   if (set == 0) {

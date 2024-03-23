@@ -1,28 +1,36 @@
 void check_pos()  {
-  if (pos_apri_fisso != 0 && pos >= pos_apri_fisso ) {
-    Serial.print("STOP >> apri fisso");
 
-    if (no_stop_sblocco) {
-      no_stop_sblocco = false;
-      pos_apri_fisso = 0;
-      ferma_WARD(7);
+  //***************************************************
+  /*if (pos_apri_fisso!=0 && pos>=pos_apri_fisso ) {
+    Serial.print("STOP >> ");
+    ferma_WARD(7);
+  } */
+  //*****************************************************
+    //----------------------------------------------------
+if (pos_apri_fisso!=0 && pos>=pos_apri_fisso ) {
+    if(si_stop_sblocco){
+     Serial.print("STOP >> apri fisso");
+     si_stop_sblocco=false;
+     pos_apri_fisso = 0;
+     ferma_WARD(7);
+     return;                                   // -- NON TESTATO    
     }
-  }
-  if (pos <= ((50 * imp) + pos_chiuso) && _Dir == -1 ) {
-    //digitalWrite(RELAY1, HIGH); 
-    //md.setM1Speed(400);
-  }
+     velocita_crocera = velocita_crocera_MAX;  // -- NON TESTATO            
+     cambiaVelocita(velocita_crocera,1);       // -- NON TESTATO
+     pos_apri_fisso = 0;  
+  } 
 
+    //--------------------------------------------------
   if (pos <= (quasiChiuso + pos_chiuso) && _Dir == -1 ) {
     porta_tutta_chiusa = true;
     porta_tutta_aperta = false;
     Serial.print("STOP >> ");
     ferma_WARD(7);
-    // Abbassa_Anta();
+    Abbassa_Anta();
 
     Stato_Anta[0] = 'T';
   }                               //-- ferma quando totto chiuso --
-  if (pos <= (quasiChiuso + pos_chiuso) && _Dir == 0 ) {
+  if (pos <= (quasiChiuso + pos_chiuso) && _Dir == 0 && Stato_Anta[0] != 'S' && Stato_Anta[0] != 'P') {
     if (set == 1) {
       Stato_Anta[0] = 'T';
     }
@@ -57,32 +65,23 @@ void check_pos()  {
       // a che
 
       velocita_crocera = velocita_crocera_MIN;            // stabilisco il target
-      cambiaVelocita(velocita_crocera, 1);
+      cambiaVelocita(velocita_crocera,1);
 
       Stato_Anta[0] = 'L';
     }
   }
+
+  // ---------------------------------------
   if (Stato_Anta[0] == 'L' && _Dir == -1 ) {
     //-- devo rallentare in finecorsa CHIUSO  --
     if (( pos <= (pos_chiuso + spazioRallenta) / 5) && velocita_crocera != velocita_crocera_CHI)
     { Serial.println("sono in spazio rallenta CHIUSO  ");
       velocita_crocera = velocita_crocera_CHI;               // stabilisco il target
-      cambiaVelocita(velocita_crocera, 1);
+      cambiaVelocita(velocita_crocera,1);
 
       Stato_Anta[0] = 'L';
     }
   }
-
-  /*if (Stato_Anta[0] == 'L' && _Dir == 1 ) {
-    //-- devo rallentare in finecorsa APERTO  --
-    if (( pos >= (pos_aperto - spazioRallenta) / 5) && velocita_crocera != velocita_crocera_CHI)
-    { Serial.println("sono in spazio rallenta APERTO  ");
-    velocita_crocera = velocita_crocera_CHI;               // stabilisco il target
-    cambiaVelocita(velocita_crocera, -1);
-
-    Stato_Anta[0] = 'L';
-    }
-    }*/
 
 } //FINE --- check_pos ---
 

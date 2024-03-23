@@ -1,4 +1,4 @@
-boolean limit() {
+ boolean limit() {
   int amp_2 = 0;
   int x1, x2, y1, y2;
   if (tensione < 0) {
@@ -7,35 +7,34 @@ boolean limit() {
   if (tensione == 0) {
     tensione = 1;
   }
-
   if (tensione < 50) {
     x1 = 0;
   }
   else {
     x1 = floor(tensione / 50.00);
+    if(tensione>=1150)
+      x1=23;
+      
   }
   x2 = (x1 + 1) * 50;
   y1 = limiti[x1];
   y2 = limiti[x1 + 1];
-  //  Serial.print("\n limit x1 = "); Serial.print(x1);
-  //   Serial.print("\n limit x2 = "); Serial.print(x2);
-  // Serial.print("\n tensione limit = "); Serial.print(tensione);
-
   amp_2 = y1 + (tensione - (x1 * 50)) * (y2 - y1) / (x2 - x1 * 50);
-  int amp_1 = fai_media();//md.getM2CurrentMilliamps();
-  //Serial.print("\n amp1 = "); Serial.print(amp_1);
-  // Serial.print("\n amp2 = "); Serial.print(amp_2);
-  if (amp_1 >= amp_2 * marginelimite / 100) {
-    Serial.print("\n superato limit = "); Serial.print(amp_1);
-    Serial.print("\n amp curva = "); Serial.print(amp_2 * marginelimite / 100);
-    for (int ic = 0; ic < 20; ic++) {
-      Serial.print("corrente " + String(ic) ); Serial.println(" = " + String(corrente[ic]));
-    }
-    Serial.print("\n tensione = "); Serial.print(tensione);
+  int amp_1 = fai_media();
+  Serial.print("amp 1 = "); Serial.println(amp_1);
+  
+  amp_2 = ((amp_2 + (((limiti[24]) - amp_2) * marginelimite / 100))+(amp_2+(amp_2*marginelimite / 100)))/2;
+  Serial.print("amp 2 = "); Serial.println(amp_2);
+  
+  if (amp_1 >= amp_2) {
+    Serial.print("superato limit = "); Serial.print(amp_1);
+    Serial.print("-AMP_2 = "); Serial.print(((amp_2 + (((limiti[24]) - amp_2) * marginelimite / 100))+(amp_2+(amp_2*marginelimite / 100)))/2);
+    Serial.print(" - amp_2 curva = "); Serial.print(amp_2 + ((limiti[24] - amp_2) * marginelimite / 100));
+    Serial.print(" - tensione = "); Serial.println(tensione);
     return true;
   }
   return false;
-} // -- fine limit
+}
 
 
 void setLimitCurve() {
@@ -68,7 +67,6 @@ void spacchetta_limit(String str) {
   char list[255];
   str.toCharArray(list, 255);
   char * pch;
-
   pch = strtok (list, "--");
   int lim = String(pch).toInt();
   limiti[1] = lim;
@@ -79,11 +77,9 @@ void spacchetta_limit(String str) {
     lim = String(pch).toInt();
     limiti[i] = lim;
   }
-
 }
 
 int fai_media() {
-
   conta_corrente = conta_corrente + 1;
   if (conta_corrente > 19) {
     conta_corrente = 0;
@@ -94,4 +90,27 @@ int fai_media() {
     tot = tot + corrente[i];
   }
   return tot / 20;
+}
+
+
+boolean limit_senza_curva() {
+  // -- l'idea è quella di monitorare la variazione in % del valore di fai_media()
+  if ( millis() - tempo_controlla_consumo < 50 ) {
+    Serial.println("troppo presto controllo consumo");
+    return false;
+  }
+  tempo_controlla_consumo = millis();
+  int m=fai_media();
+  Serial.print("fai media ");Serial.println(m);
+  Serial.print("fai media vecchio ");Serial.println(fai_media_vecchio);
+  Serial.print("percentuale ");Serial.print((((m - fai_media_vecchio) / fai_media_vecchio) * 100));
+  if ((((m - fai_media_vecchio) / fai_media_vecchio) * 100.00) > 15) {
+    // allora fermo
+    // nello stop metto a 0 fai_media_vecchio
+    // sparo emergenza
+    Serial.println("superato controllo consumo");
+    return true;
+  }
+  fai_media_vecchio = fai_media();
+  return false;
 }

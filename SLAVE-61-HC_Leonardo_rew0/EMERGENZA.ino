@@ -8,24 +8,18 @@ void emergenza(int rh) {
   //-- 4 LA DIREZIONE
   //-- 5 LA PROVENIENZA
   //-- POTREMMO INSERIRE QUESTI DATI SUBITO DOPO LA "S" DIVIDENDOLI CON UNA "," E FINENDO LA STINGA CON UN "#".
-  if (( pos >= (pos_aperto - (7 * imp))) && _Dir == 1 ) {
-    ferma_WARD(30);
-    porta_tutta_chiusa = false;
-    porta_tutta_aperta = true;
-    Stato_Anta[0] = 'A';
-    return;
-  }
+
   Serial.print("\n emergenza = "); Serial.print(rh);
 
   str_emergenza =  String(v_attuale) + "**" + String(fai_media()) + "**" + String( _Dir) + "**" + String(rh);
 
-  Stato_Anta[0] = 'S';                    // -- questa informazione non verr� mai spedita :-(
+  Stato_Anta[0] = 'S';                    // -- questa informazione non verrà mai spedita :-(
   //Ascolta_Master();                       // -- almeno un pacchetto lo mando
-  invia("0000");
+  //invia("0000");*********************************************************
   // ** se ricevo un comando lo perdo ammeno che non creiamo una situazione nuova
-  // ** che sospende il ciclio di conferma : ad esempio se risposta comando � 9999
+  // ** che sospende il ciclio di conferma : ad esempio se risposta comando è 9999
   // ** allora sia lo slave che il server ignorano il comando e non cambiano il comando vecchio
-  // -- mi salvo la direzione che devo prendere per liberare l'ostacolo prima di fermare altrmenti poi � zero
+  // -- mi salvo la direzione che devo prendere per liberare l'ostacolo prima di fermare altrmenti poi è zero
   if (v_attuale < 0) {
     v_attuale = -v_attuale;
   }
@@ -38,8 +32,15 @@ void emergenza(int rh) {
     // @-- Serial.print("\n i = "); Serial.print(i);
     fai_media();
     delay(1);
-  }
-  md.setM2Speed(0);          // -- fermo in rapidit�
+    if((i%10)==0){
+    Ascolta_Master();
+    if(str==7777){
+        str = 0; str_emergenza = "";
+         Stato_Anta[0] = 'P'; 
+      }
+    }
+  }                          
+  md.setM2Speed(0);          // -- fermo in rapidità
   digitalWrite(4, LOW);      // DISABILITA I MOTORI
   velocita_crocera = 0;
   v_attuale = 0;
@@ -56,20 +57,28 @@ void emergenza(int rh) {
   digitalWrite(4, HIGH);                  // -- abilito il motore
   // @-- velocita_crocera = velocita_crocera_COL;
   // @-- cambiaVelocita(velocita_crocera, 1);    // -- avvio l'anta
-
-
+  
+  
   for ( int i = 0; i <= 600; i++) {        // -- avvio l'anta
     v_attuale = (i * _Dir * motore);
     md.setM2Speed(v_attuale);
     fai_media();
     delay(1);
-  }
-
+    if((i%10)==0){
+    Ascolta_Master();
+    if(str==7777){
+        str = 0; str_emergenza = "";
+         Stato_Anta[0] = 'P'; 
+      }
+    }
+  } 
+                           
   int i = 0;
   int pos_vecchio = 0;
-
+  if (Level_Debug == 1){
   Serial.print("\n pos_E = "); Serial.print(pos_E);
   Serial.print("\n pos = "); Serial.print(pos);
+  }
   while ( i < 60) {                     // -- tempo massimo 3 secondi
     if (_Dir == 1 && pos >= pos_E) {      // -- in base alla direzione se vado oltre il pos_E esco
       break;
@@ -81,13 +90,10 @@ void emergenza(int rh) {
       // -- QUESTA POTREBBE ESSERE LA PESEUDO VELOCITA' PER CAPIRE CHE SE A 500(lo possiamo anche alzare)
       // -- NON CAMBIA IL POS ALLORA SIAMO BLOCCATI CONTRO IL FINECORSA
       Serial.println("pos invariato reset chiudo stop");
-      break;
+     break;
     }
     pos_vecchio = pos;
     delay(50);                             // -- ritardo
-    if (limit()) {
-      break;
-    }
     i++;
   }
   //77777777777777777777777777777777777777777
@@ -99,15 +105,15 @@ void emergenza(int rh) {
     // @-- Serial.print("\n i = "); Serial.print(i);
     fai_media();
     delay(1);
-  }
-  md.setM2Speed(0);          // -- fermo in rapidit�
+  }                          
+  md.setM2Speed(0);          // -- fermo in rapidità
   digitalWrite(4, LOW);      // DISABILITA I MOTORI
   velocita_crocera = 0;
   v_attuale = 0;
   tensione = 1;
   iCrocera = 0;                          // -- fermo
   pos_E = 0;                              // resetto pos_E non si sa mai
-  Stato_Anta[0] = 'S';
+ 
   _Dir = 0;
 }
 
