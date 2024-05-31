@@ -1,7 +1,8 @@
 IPAddress controller(192, 168, 81, 90);
 
-int contatore = 0;                          // per determinare ogni quanto stampare a video nel loop
 
+int contatore = 0;                          // per determinare ogni quanto stampare a video nel loop
+int cadenza = 2;
 boolean bloc = false;                    // per attivare lo stop
 boolean fast = false;                    // per attivare il fast_ward();
 
@@ -15,7 +16,7 @@ long pos_chiuso = 0;                      // VALORE DELLA POSIZIONE TUTTO CHIUSO
 long pos_aperto = 40000;//7900; //16000;                  // VALORE DELLA POSIZIONE TUTTO APERTO
 long pos_apri_fisso = 0;
 long Pos_vecchio = 0;
-long pos_precedente = 0;
+
 boolean apri = false;                     // per il spingi e vai
 boolean chiudi = false;                   // per il spingi e vai
 
@@ -44,6 +45,8 @@ volatile unsigned long T11 = 0;                 // PER MISURARE IL TEMPO TRA UN 
 volatile unsigned long T2 = 0;                  // PER MISURARE IL TEMPO TRA UN POS E L'ALTRO
 volatile unsigned long T3 = 100000;             // PER MISURARE IL TEMPO TRA UN POS E L'ALTRO
 volatile unsigned long T5 = 0;                  // PER MISURARE IL TEMPO TRA UN POS E L'ALTRO
+volatile int t_delta = 0;
+volatile float imp_vel = ((1 / (imp / (cadenza * 2))) * 1000000);
 float T4 = 0.00;                                // per convertire il formato
 
 int corrente[20];
@@ -65,16 +68,16 @@ float velocita_crocera_SET = 70;                  // ******** NON PIU' USATO    
 
 float quasiChiuso = 5;                            // espresso in mm lo lascerei fisso non modificabile
 float quasiChiuso_mm = 5;
-float spazioRallenta = 300;        // si          // espresso in mm
-float spazioRallenta_mm = 300;
+float spazioRallenta = 350;        // si          // espresso in mm
+float spazioRallenta_mm = 350;
 float spazioRallenta_hold;                        // serve per salvare il valore iniziale
 int spazio_no_chk_vel = 1;         // si          // espresso in mm
 int spazio_no_chk_vel_mm = 1;
 
 float velocita_crocera_COL = 70;   // si          // VELOCITA IN CASO DI COLLISIONE IN mm/sec
 float velocita_crocera_MAX = 150;  // si          // VELOCITA' MASSIMA IN mm/sec
-float velocita_crocera_MIN = 75;   // si          // VELOCITA' LENTO IN mm/sec
-float velocita_crocera_CHI = 70;   // si          // VELOCITA' LENTO IN mm/sec
+float velocita_crocera_MIN = 60;   // si          // VELOCITA' LENTO IN mm/sec
+float velocita_crocera_CHI = 50;   // si          // VELOCITA' LENTO IN mm/sec
 
 float V_Range_UP = 0.05;           // si          // usata in controllo crociera per determinare il raggiongimento del targhet
 float V_Range_Down = 0.05;

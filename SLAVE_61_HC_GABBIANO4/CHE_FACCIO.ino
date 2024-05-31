@@ -175,6 +175,7 @@ String mm="";
     case 3339: // -- PER CAMBIARE IL VALORE DI PESO
       peso = str2.toInt();
       marginelimite=peso;
+      if (peso > 25) peso = 25;
       Serial.print("\n peso = "); Serial.print(peso);
       break;
     case 3310: // -- PER SETTARE IL VALORE DI POS_APERTO
@@ -188,7 +189,7 @@ String mm="";
       spazioRallenta = spazioRallenta_mm * imp;  
       quasiChiuso = quasiChiuso_mm * imp; 
       spazio_no_chk_vel = spazio_no_chk_vel_mm * imp;
-  
+      imp_vel = ((1 / (imp / (cadenza * 2))) * 1000000);
       break;
    case 3312: // -- PER CAMBIARE LA VELOCITA' MINIMA
       str3 = str2.toInt() ;

@@ -4,6 +4,7 @@
 #include <SPI.h>
 #include <WiFiNINA_Generic.h>
 
+
 //*************************************************
 
 #include "DualMC33926MotorShield.h"
@@ -32,17 +33,17 @@ IPAddress ipmask(255, 255, 255, 0);
 //**********************************************************************
 
 int led =  LED_BUILTIN;//pin 13 su 33 IOT
-
+ 
 void setup() {
-  pinMode(5, OUTPUT);
-  pinMode(11, OUTPUT);
+  pinMode(5, OUTPUT); // PIN PER DROP-BOLT
+  pinMode(11, OUTPUT); // PIN PER HC
   pinMode(led, OUTPUT);       // set the LED pin mode
   pinMode(A2, INPUT);         // VALORE DEL PIN PER CONTROLLO TENSIONE
   pinMode(A7, INPUT_PULLUP);  // VALORE DEL PIN PER ANTA FINE CORSA BASSO
   pinMode(A6, INPUT_PULLUP);  // VALORE DEL PIN PER ANTA FINE CORSA BASSO
   pinMode(2, INPUT_PULLUP);  //PIN ENCODER
   pinMode(3, INPUT_PULLUP);  //PIN ENCODER
-  digitalWrite(5, HIGH);
+  digitalWrite(5, LOW);
   digitalWrite(11, HIGH);
   attachInterrupt(digitalPinToInterrupt(3), avanti_3, CHANGE);
   attachInterrupt(digitalPinToInterrupt(2), avanti_2, RISING);
@@ -113,7 +114,6 @@ void loop() {
   //********** INTERPRETA LA STRINGA RICEVUTA ED ESEGUE IL RELATIVO COMANDO
   che_faccio();
   fai_media();
- 
   //********** STAMPA LO STATO OGNI 50 GIRI
 
   delay(5);
@@ -150,7 +150,7 @@ void loop() {
     check_pos();
   }
   delay(5);
-  if (  _Dir != 0 && limit_senza_curva()) {
+  if (  _Dir != 0 && limit_senza_curva(1)) {
     emergenza(66);
   }
   delay(5);

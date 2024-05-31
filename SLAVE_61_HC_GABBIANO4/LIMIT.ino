@@ -93,24 +93,22 @@ int fai_media() {
 }
 
 
-boolean limit_senza_curva() {
-  // -- l'idea è quella di monitorare la variazione in % del valore di fai_media()
-  if ( millis() - tempo_controlla_consumo < 50 ) {
-    Serial.println("troppo presto controllo consumo");
+boolean limit_senza_curva(int fattore) {  // -- l'idea è quella di monitorare la variazione in % del valore di fai_media()
+  if ( millis() - tempo_controlla_consumo < 25 ) {  //  Serial.println("troppo presto controllo consumo"); 
     return false;
   }
   tempo_controlla_consumo = millis();
   int m=fai_media();
+  if (m <= 50) m = 50;
+  if (fai_media_vecchio <= 50) fai_media_vecchio = 50;
+  Serial.print("V_M =  ");Serial.println(V_M);
   Serial.print("fai media ");Serial.println(m);
   Serial.print("fai media vecchio ");Serial.println(fai_media_vecchio);
   Serial.print("percentuale ");Serial.print((((m - fai_media_vecchio) / fai_media_vecchio) * 100));
-  if ((((m - fai_media_vecchio) / fai_media_vecchio) * 100.00) > 20) {
-    // allora fermo
-    // nello stop metto a 0 fai_media_vecchio
-    // sparo emergenza
+  if (abs(((m - fai_media_vecchio) / fai_media_vecchio) * 100.00) > peso * fattore) {
     Serial.println("superato controllo consumo");
     return true;
   }
-  fai_media_vecchio = fai_media();
+  fai_media_vecchio = fai_media(); // EZZARO ENTRAMBI ALLA FINE DELL  ferma_WARD( int passo)
   return false;
 }

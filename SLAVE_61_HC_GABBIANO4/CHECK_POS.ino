@@ -26,7 +26,7 @@ if (pos_apri_fisso!=0 && pos>=pos_apri_fisso ) {
     porta_tutta_aperta = false;
     Serial.print("STOP >> ");
     ferma_WARD(7);
-    Abbassa_Anta();
+    //Abbassa_Anta();
 
     Stato_Anta[0] = 'T';
   }                               //-- ferma quando totto chiuso --
