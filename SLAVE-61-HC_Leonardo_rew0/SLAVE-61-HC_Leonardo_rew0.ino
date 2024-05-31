@@ -2,9 +2,7 @@
 #include "defines.h"
 #include "arduino_secrets.h"
 #include <SPI.h>
-#include <WiFiNINA.h>
-#include <WiFiUdp.h>
-#include <ArduinoOTA.h>
+#include <WiFiNINA_Generic.h>
 
 //*************************************************
 
@@ -115,6 +113,7 @@ void loop() {
   //********** INTERPRETA LA STRINGA RICEVUTA ED ESEGUE IL RELATIVO COMANDO
   che_faccio();
   fai_media();
+ 
   //********** STAMPA LO STATO OGNI 50 GIRI
 
   delay(5);

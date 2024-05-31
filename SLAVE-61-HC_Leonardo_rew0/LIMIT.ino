@@ -104,7 +104,7 @@ boolean limit_senza_curva() {
   Serial.print("fai media ");Serial.println(m);
   Serial.print("fai media vecchio ");Serial.println(fai_media_vecchio);
   Serial.print("percentuale ");Serial.print((((m - fai_media_vecchio) / fai_media_vecchio) * 100));
-  if ((((m - fai_media_vecchio) / fai_media_vecchio) * 100.00) > 15) {
+  if ((((m - fai_media_vecchio) / fai_media_vecchio) * 100.00) > 20) {
     // allora fermo
     // nello stop metto a 0 fai_media_vecchio
     // sparo emergenza

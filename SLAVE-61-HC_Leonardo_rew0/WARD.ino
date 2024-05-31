@@ -37,6 +37,7 @@ void WARD(int dir, int except, int prw, int mm) {
     //***********************************************************
     if (except == 1) {
       pos_apri_fisso = mm * imp;
+    Serial.print(" except === " );Serial.println(except);  
       velocita_crocera = velocita_crocera_COL; // -- MEGLIO METTERE velocita_crocera_COL OPPURE ACCELERARE DOPO I mm A velocita_crocera_MAX IN check_pos()
       delta = velocita_crocera;
 
@@ -74,7 +75,7 @@ void WARD(int dir, int except, int prw, int mm) {
   digitalWrite(4, HIGH);
   delay(1);
   int  i ;
-  int rob = 3;// ibrido 0 astec 2
+  int rob = 0;// ibrido 0 astec 2
   float velocita = 0.00;
   V_M = 0.00;
   //******** accelero fino a topSpeed
@@ -256,6 +257,8 @@ void ferma_WARD( int passo) {     // DEVO FERMARE ho introdotto il passo così p
 // CONTROLLA_VELOCITA_WARD
 //*****************************************
 void controlla_velocita_WARD() {
+   Serial.print("vel. croc");Serial.println(velocita_crocera);
+   
   if ( millis() - tempo_controlla_velocita < 75 ) {
     Serial.println("troppo presto");
     return;
@@ -267,16 +270,19 @@ void controlla_velocita_WARD() {
     return;
   }
   velocita_misurata = Tachi_Metro();
+  Serial.print("vel. misurata in control ward");Serial.println(velocita_misurata);
   if ((micros() - Tempo_Reazione_Emergenza) > 200000) {
     Tempo_Reazione_Emergenza = 0;
     Conto_Emergenze = 0;
   }
   velocita_misurata = Tachi_Metro();
+  Serial.print("vel. misurata in control ward");Serial.println(velocita_misurata);
   if ((micros() - Tempo_Reazione_Emergenza) > 200000) {
     Tempo_Reazione_Emergenza = 0;
     Conto_Emergenze = 0;
   }
   velocita_misurata = Tachi_Metro();
+  Serial.print("vel. misurata in control ward");Serial.println(velocita_misurata);
   if (velocita_misurata < (velocita_crocera * (attrito + (velocita_crocera  * 0.02 * 0.01))) && pos > 12 * imp) {
     fai_media();
     if (Tempo_Reazione_Emergenza == 0) {
@@ -291,6 +297,7 @@ void controlla_velocita_WARD() {
     }
   }
   fai_media();
+  Serial.print("vel. misurata in control ward");Serial.println(velocita_misurata);
   if (_Dir != 0) {
     if (velocita_misurata > (velocita_crocera * 1.01)) {
       if (velocita_misurata > (velocita_crocera * 1.02)) {
