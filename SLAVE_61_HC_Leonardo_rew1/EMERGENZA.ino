@@ -11,7 +11,7 @@ void emergenza(int rh) {
 
   Serial.print("\n emergenza = "); Serial.print(rh);
 
-  str_emergenza =  String(v_attuale) + "**" + String(fai_media()) + "**" + String( _Dir) + "**" + String(rh);
+  str_emergenza =  String(v_attuale) + "**" + String(fai_media()) + "**" + String( _Dir) + "**" + String(rh) + "**" + String(pos);
 
   Stato_Anta[0] = 'S';                    // -- questa informazione non verrà mai spedita :-(
   //Ascolta_Master();                       // -- almeno un pacchetto lo mando

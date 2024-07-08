@@ -2,9 +2,8 @@
 #include "defines.h"
 #include "arduino_secrets.h"
 #include <SPI.h>
-#include <WiFiNINA.h>
-#include <WiFiUdp.h>
-#include <ArduinoOTA.h>
+#include <WiFiNINA_Generic.h>
+
 
 //*************************************************
 
@@ -34,17 +33,17 @@ IPAddress ipmask(255, 255, 255, 0);
 //**********************************************************************
 
 int led =  LED_BUILTIN;//pin 13 su 33 IOT
-
+ 
 void setup() {
-  pinMode(5, OUTPUT);
-  pinMode(11, OUTPUT);
+  pinMode(5, OUTPUT); // PIN PER DROP-BOLT
+  pinMode(11, OUTPUT); // PIN PER HC
   pinMode(led, OUTPUT);       // set the LED pin mode
   pinMode(A2, INPUT);         // VALORE DEL PIN PER CONTROLLO TENSIONE
   pinMode(A7, INPUT_PULLUP);  // VALORE DEL PIN PER ANTA FINE CORSA BASSO
   pinMode(A6, INPUT_PULLUP);  // VALORE DEL PIN PER ANTA FINE CORSA BASSO
   pinMode(2, INPUT_PULLUP);  //PIN ENCODER
   pinMode(3, INPUT_PULLUP);  //PIN ENCODER
-  digitalWrite(5, HIGH);
+  digitalWrite(5, LOW);
   digitalWrite(11, HIGH);
   attachInterrupt(digitalPinToInterrupt(3), avanti_3, CHANGE);
   attachInterrupt(digitalPinToInterrupt(2), avanti_2, RISING);
@@ -68,6 +67,7 @@ void setup() {
   //************ IMPOSTAZIONI WIFI
   //************ SE SI USA ROUTING STATICO SUL ROUTER TOGLIERE COMMENTARE WIFI.CONFIG
   Serial.println("\nStart Client WiFiUdpSendReceiveString on " + String(BOARD_NAME));
+  /*
   if (WiFi.status() == WL_NO_MODULE)                                       // check for the WiFi module
   {
     Serial.println("Communication with WiFi module failed!");
@@ -90,7 +90,7 @@ void setup() {
   Serial.println("Connected to wifi");
   printWifiStatus();
   Serial.println("\nStarting connection to server...");
- 
+ */
 
 }
 
@@ -151,7 +151,7 @@ void loop() {
     check_pos();
   }
   delay(5);
-  if (  _Dir != 0 && limit_senza_curva()) {
+  if (  _Dir != 0 && limit_senza_curva(1)) {
     emergenza(66);
   }
   delay(5);

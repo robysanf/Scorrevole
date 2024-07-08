@@ -7,10 +7,10 @@ void WARD(int dir, int except, int prw, int mm) {
     return;
   }
   if ( dir == -1 && porta_tutta_chiusa == true) {
-    Abbassa_Anta();
+    //Abbassa_Anta();
     return;
   }
-
+Serial.print(" porta_tutta_chiusa === " ); Serial.println(porta_tutta_chiusa);
   //******* unico punto in cui si definisce _DIR != 0 utilizzato da altre parti nel codice
   _Dir = dir;
 
@@ -27,27 +27,69 @@ void WARD(int dir, int except, int prw, int mm) {
   if ( digitalRead(A7) == LOW || Stato_Alzata[0] != 'U') { //-- *****ATTENZIONE**** METTERE VARIABILE CON A7
 
     Alza_Anta();
+    
     Serial.print("\n ultimo comando === " ); Serial.println(str_old);
     Serial.print("\n ultimo comando === " ); Serial.println(str);
     Ascolta_Master();
     Serial.print("\n ultimo comando === " ); Serial.println(str_old);
     Serial.print("\n ultimo comando === " ); Serial.println(str);
+  }
     //******* quando chiamo ward con except=1 fa solo ABBASSA_ANTA o ALZA_ANTA
     // verificare versione indonesia ASHIOK come gestisce apertura
     //***********************************************************
+    /*
     if (except == 1) {
       pos_apri_fisso = mm * imp;
       velocita_crocera = velocita_crocera_COL; // -- MEGLIO METTERE velocita_crocera_COL OPPURE ACCELERARE DOPO I mm A velocita_crocera_MAX IN check_pos()
       delta = velocita_crocera;
 
     }
+    */
+  if (except == 1) {
+    if ( dir == 1 && porta_tutta_chiusa == true) {                  // -- PROCEDURA DI SBLOCCO
+      digitalWrite(4, HIGH);
+      Serial.print("\n PROCEDURA SBLOCCO" ); 
+      digitalWrite (5, HIGH);//low
+      
+
+      porta_tutta_chiusa = false;                                                  // -- SPINGO L'ANTA IN AVANTI
+      for ( int i = 80; i >= -300; i = i - 1) {
+        md.setM2Speed(i * motore);
+        delay(2);
+      }
+      // FERMO L'ANTA E AZZERO LE VARIABILI
+      for (int i = -300; i <= -80; i ++ ) {
+        md.setM2Speed(i * motore);
+        delay(1);
+      }
+      md.setM2Speed(0);
+      porta_tutta_chiusa = false;
+      v_attuale = 0;
+    }
+    velocita_crocera = velocita_crocera_COL;
+    pos_apri_fisso = mm * imp;
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
     if (except == 2) {
       ferma_WARD(7);
       str = 0;
       return;
 
     }
-  }
+  
+  _Dir = dir;
   if (str == 2221 && mm == 0) {
     Serial.print("\n ricevuto 2221 in wARD === " );
     ferma_WARD(7);
@@ -74,7 +116,7 @@ void WARD(int dir, int except, int prw, int mm) {
   digitalWrite(4, HIGH);
   delay(1);
   int  i ;
-  int rob = 3;// ibrido 0 astec 2
+  int rob = 1;// ibrido 0 astec 2
   float velocita = 0.00;
   V_M = 0.00;
   //******** accelero fino a topSpeed
@@ -94,9 +136,9 @@ void WARD(int dir, int except, int prw, int mm) {
       return;
     }
     pos_vecchio = pos;
-   /* if (limit()) {
+   /* if (limit_senza_curva()) {
       v_attuale = i;
-      emergenza(3);
+      emergenza(55);
       return;
     }*/
     if (crocera(1)) {
@@ -117,7 +159,7 @@ void WARD(int dir, int except, int prw, int mm) {
         v_attuale = i;
         porta_tutta_chiusa = true;
         ferma_WARD(7);
-        Abbassa_Anta();
+        //Abbassa_Anta();
         return;
       }
       //PERCHè? questo non verrà mai eseguito
@@ -163,7 +205,7 @@ void WARD(int dir, int except, int prw, int mm) {
       }
     }
     //------------------------------------------------
-    //delay(5);
+    delay(1);
   }//FINE for
 
   if (dir == 1) {
@@ -172,6 +214,8 @@ void WARD(int dir, int except, int prw, int mm) {
   if (dir == -1) {
     porta_tutta_aperta = false;
   }
+  //md.setM1Speed(0);
+  digitalWrite (5, LOW);//high
   v_attuale = (i * dir * motore);// in piu
   tensione = (i * dir * motore);
 }
@@ -248,8 +292,14 @@ void ferma_WARD( int passo) {     // DEVO FERMARE ho introdotto il passo così p
   }
   str_emergenza = "";
   delay(50);
+  //md.setM1Speed(0);
   digitalWrite(4, LOW);   // DISABILITA I MOTORI
-  Serial.print("FINE FERMA WARD ");
+  digitalWrite(5, LOW);
+  for ( i = 0; i < 20; i++) { // azzero valori di fai_media() 
+    corrente[i] = 0;
+  }
+  fai_media_vecchio = 0; // azzero valore di fai_media_vecchio
+  Serial.println("FINE FERMA WARD ");
 }
 
 //******************************************
@@ -262,8 +312,8 @@ void controlla_velocita_WARD() {
   }
   tempo_controlla_velocita = millis();
   fai_media();
-  if (pos <= ((20 * imp) + pos_chiuso) && _Dir == -1 ) {
-    Serial.println("sono dentro al telaio");
+  if (pos <= ((15 * imp) + pos_chiuso) && _Dir == -1 ) {
+    Serial.println("sono dentro al telaio" + String(((20 * imp) + pos_chiuso)));
     return;
   }
   velocita_misurata = Tachi_Metro();
@@ -416,7 +466,6 @@ void cambiaVelocita(int velocita_crocera_target, int passo) {
   }
   int i = 0;
 
-  boolean test1 = true; boolean test2 = true; boolean test3 = true;
   for ( i = v_attuale; i >= 0; i = i + verso * passo )
   {
     md.setM2Speed(i * _Dir * motore);
@@ -429,7 +478,7 @@ void cambiaVelocita(int velocita_crocera_target, int passo) {
       }
       if (crocera(verso)) {
         iCrocera = (i);
-        //Serial.println("ok crocera verso1 " + String(i));
+        Serial.println("ok crocera verso1 " + String(i));
         break;
       }
       if (spazio_fine_corsa() && Stato_Anta[0] == 'C') {
@@ -440,40 +489,23 @@ void cambiaVelocita(int velocita_crocera_target, int passo) {
       float v = Tachi_Metro();
       if (Tachi_Metro() > velocita_crocera_target + (delta * 0.7) ) {
         delay(1);
-        if (test1) {
-          //Serial.print("V_M1 " + String(v)); Serial.println("target1 " + String(velocita_crocera_target + (delta * 0.7) ));
-          test1 = false;
-        }
-
       }
       if ((Tachi_Metro() < velocita_crocera_target + (delta * 0.5)) &&  (Tachi_Metro() > velocita_crocera_target + (delta * 0.3))) {
         delay(2 * inerzia);
-        if (test2) {
-          //Serial.print("V_M2 " + String(v)); Serial.println("target2 " + String(velocita_crocera_target + (delta * 0.5) ));
-          test2 = false;
-        }
-
       }
       if (Tachi_Metro() < velocita_crocera_target + (delta * 0.3) ) {
         delay(4 * inerzia);
-        if (test3) {
-          //Serial.print("V_M3 " + String(v)); Serial.println("target3 " + String(velocita_crocera_target + (delta * 0.3) ));
-          test3 = false;
-        }
       }
       if (crocera(verso)) {
         iCrocera = (i);
         Serial.println("ok crocera verso -1 " + String(i));
         break;
       }
-      if (spazio_fine_corsa() && Stato_Anta[0] == 'C') {///***************************************testare serve C
-        return;
-      }
     }//end if verso -1
     if (spazio_fine_corsa()) {
       if (_Dir == -1) {
-        ferma_WARD(7);
-        Abbassa_Anta();
+        ferma_WARD(30);
+        //Abbassa_Anta();
         return;
       }
       if (_Dir == 1) {
@@ -483,9 +515,7 @@ void cambiaVelocita(int velocita_crocera_target, int passo) {
     }
     ///****************VERIFICARE QUANTO PESA**************************************
     Ascolta_Master();
-    // Serial.println("stato ");Serial.print(Stato_Anta[0]);
     if (str == 2221 && Stato_Anta[0] != 'S' ) {
-      //Serial.println("2221 denrtro cambio vel");
       ferma_WARD(7);
       str = 0;
       return;
@@ -495,7 +525,7 @@ void cambiaVelocita(int velocita_crocera_target, int passo) {
     }
     //**********************************************
     tensione = i * _Dir * motore;
-    if (limit()) {
+    if (limit_senza_curva(2)) {
       v_attuale = i * _Dir * motore ;
       tensione = i * _Dir * motore;
       emergenza(6);
