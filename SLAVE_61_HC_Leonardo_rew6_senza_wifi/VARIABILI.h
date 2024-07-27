@@ -2,7 +2,7 @@ IPAddress controller(192, 168, 81, 90);
 
 
 int contatore = 0;                          // per determinare ogni quanto stampare a video nel loop
-int cadenza = 2;
+int cadenza = 8;
 boolean bloc = false;                    // per attivare lo stop
 boolean fast = false;                    // per attivare il fast_ward();
 
@@ -41,11 +41,7 @@ int TopSpeed = 1200;    // riscalato nelle lib del MC33926
 float imp = 34.00;  //2.8 ibrido;   6.6 intecno;  80 CBF;      // inpulsi per millimetro cambia in base al CPR del encoder
 volatile int giro = 0;
 volatile unsigned long T1 = 0;                  // PER MISURARE IL TEMPO TRA UN POS E L'ALTRO
-volatile unsigned long T11 = 0;                 // PER MISURARE IL TEMPO TRA UN POS E L'ALTRO
 volatile unsigned long T2 = 0;                  // PER MISURARE IL TEMPO TRA UN POS E L'ALTRO
-volatile unsigned long T3 = 100000;             // PER MISURARE IL TEMPO TRA UN POS E L'ALTRO
-volatile unsigned long T5 = 0;                  // PER MISURARE IL TEMPO TRA UN POS E L'ALTRO
-volatile int t_delta = 0;
 volatile float imp_vel = ((1 / (imp / (cadenza * 2))) * 1000000);
 float T4 = 0.00;                                // per convertire il formato
 
@@ -76,11 +72,11 @@ int spazio_no_chk_vel_mm = 1;
 
 float velocita_crocera_COL = 70;   // si          // VELOCITA IN CASO DI COLLISIONE IN mm/sec
 float velocita_crocera_MAX = 150;  // si          // VELOCITA' MASSIMA IN mm/sec
-float velocita_crocera_MIN = 60;   // si          // VELOCITA' LENTO IN mm/sec
-float velocita_crocera_CHI = 50;   // si          // VELOCITA' LENTO IN mm/sec
+float velocita_crocera_MIN = 90;   // si          // VELOCITA' LENTO IN mm/sec
+float velocita_crocera_CHI = 70;   // si          // VELOCITA' LENTO IN mm/sec
 
-float V_Range_UP = 0.05;           // si          // usata in controllo crociera per determinare il raggiongimento del targhet
-float V_Range_Down = 0.05;
+float V_Range_UP = 0.01;           // si          // usata in controllo crociera per determinare il raggiongimento del targhet
+float V_Range_Down = 0.01;
 float attrito = 0.50;               // si                     // usata in controllo velocità per compensare attriti etc...
 int motore = 1;                   // si                     // indica il cablaggio del motore di defoult 1
 int encoder = -1;                  // si                     // indica il cablaggio del encoder di defoult 1
@@ -110,3 +106,8 @@ int tempo_controlla_velocita = 0;
 int tempo_controlla_consumo = 0;
 float fai_media_vecchio = 0;
 int pos_vecchio = 0;
+int robglobal = 4;// ibrido 0 astec 2
+boolean prima_volta = false;
+int sensibilita = 3;
+int Contatore_Consumo=0;
+int Tempo_consumo = 0;

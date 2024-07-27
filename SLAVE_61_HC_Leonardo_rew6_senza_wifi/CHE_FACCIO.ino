@@ -196,6 +196,11 @@ String mm="";
       velocita_crocera_SET = str3 / 100.00;
       Serial.print("\n velocita_crocera_MIN = "); Serial.print(velocita_crocera_MIN);
       break;
+      case 3313: // -- PER SETTARE LA SENSIBILITA
+      str3 = str2.toInt() ;
+      sensibilita = str3 ;
+      Serial.print("\n velocita_crocera_MIN = "); Serial.print(velocita_crocera_MIN);
+      break;
     case 3340: // -- PER SETTARE I LIMITI DELLA CURVA
       spacchetta_limit(str2);
       Serial.print("\n carica limit = "); Serial.print(str2);

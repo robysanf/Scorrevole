@@ -3,11 +3,10 @@ void Ascolta_Master() {
   String risposta = "";
   String str_in_arrivo = "0000";
   if (Serial1.available())
-  { delay(15);
+  { delay(20);
     packetBuffer[0] = '\0';
     int lung = hc12_read(packetBuffer, 255);
-    packetBuffer[lung - 1] = '\0';
-    Serial.println(packetBuffer);
+    packetBuffer[lung - 1] = '\0';    
     if (!costruisci_mesg(packetBuffer)) {
       return;
     }
@@ -36,7 +35,6 @@ void Ascolta_Master() {
 void invia(String str_ricevuta) {
   ReplyBuffer[0] = '\0';
   String risposta = String(sonoio) + "," + Stato_Anta[0] + "," + _Dir + "," + Stato_Alzata[0] + "," + pos + "," + str_ricevuta + "," + str_emergenza + "," + String(millis())+ ",@" ;
-  Serial.print("risposta "); Serial.println(risposta);
   risposta.toCharArray(ReplyBuffer, 255);
   Serial1.write(ReplyBuffer);
 
@@ -48,7 +46,6 @@ boolean costruisci_mesg(char msg_in[]) {
   String s = String(hold_packet) + String(msg_in);
   if (String(s).endsWith("@")){ 
     s.toCharArray(packetBuffer, 255);
-    Serial.print("hold "); Serial.println(s);
     return true;
   } else { 
   Serial.println("costruisci false ");

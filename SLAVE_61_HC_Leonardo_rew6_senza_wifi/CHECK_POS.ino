@@ -16,7 +16,7 @@ if (pos_apri_fisso!=0 && pos>=pos_apri_fisso ) {
      return;                                   // -- NON TESTATO    
     }
      velocita_crocera = velocita_crocera_MAX;  // -- NON TESTATO            
-     cambiaVelocita(velocita_crocera,1);       // -- NON TESTATO
+     cambiaVelocita(velocita_crocera,robglobal);       // -- NON TESTATO
      pos_apri_fisso = 0;  
   } 
 
@@ -65,24 +65,24 @@ if (pos_apri_fisso!=0 && pos>=pos_apri_fisso ) {
       // a che
 
       velocita_crocera = velocita_crocera_MIN;            // stabilisco il target
-      cambiaVelocita(velocita_crocera,1);
+      cambiaVelocita(velocita_crocera,robglobal);
 
       Stato_Anta[0] = 'L';
     }
   }
 
   // ---------------------------------------
-  if (Stato_Anta[0] == 'L' && _Dir == -1 ) {
+  /*if (Stato_Anta[0] == 'L' && _Dir == -1 ) {
     //-- devo rallentare in finecorsa CHIUSO  --
     if (( pos <= (pos_chiuso + spazioRallenta) / 5) && velocita_crocera != velocita_crocera_CHI)
     { Serial.println("sono in spazio rallenta CHIUSO  ");
       velocita_crocera = velocita_crocera_CHI;               // stabilisco il target
-      cambiaVelocita(velocita_crocera,1);
+      cambiaVelocita(velocita_crocera,robglobal);
 
       Stato_Anta[0] = 'L';
     }
   }
-
+*/  
 } //FINE --- check_pos ---
 
 boolean spazio_fine_corsa() {

@@ -32,6 +32,10 @@ char pass[] = SECRET_PASS;              // your network password (use for WPA, o
 unsigned int localPort = 2390;          // local port to listen on
 int test_alzata = 0;
 int cicli_test = 0;
+int cicli_6 = 0;
+int cicli_16 = 0;
+int cicli_55 = 0;
+int cicli_66 = 0;
 long parti = 0;
 boolean test_chiudi = true;
 int led =  LED_BUILTIN;
@@ -80,7 +84,7 @@ void setup()
         
  WiFiStorageFile file = WiFiStorage.open("/fs/config");
   //file.erase(); //SCOMMENTARE SE SI VUOLE RESETTARE LO STORAGE E POI RICOMMENTARE
-if (!file) {
+if (file) {
     Serial.println("entrato");// se il file non esisteva facendo open lo crea ma è vuoto se ha meno di 5 caratteri è da reimpostare
     file.erase();
     file.close();

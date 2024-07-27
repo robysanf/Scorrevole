@@ -24,7 +24,7 @@ void calcola_velocita() {
   Serial.print("\n costante = "); Serial.println(costante);
   for (i = 1; i <= Numero_Ante_Slave; i = i + 1) {
     Serial.print("\n costante i = "); Serial.println(i);
-    if (ritardo[i] == NULL) {
+    if (ritardo[i] == 0) {
       ritardo[i] = 1;
       Serial.print("\n costante i2 = ");
       Serial.println(i);

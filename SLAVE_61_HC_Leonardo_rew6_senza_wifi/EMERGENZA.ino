@@ -56,7 +56,7 @@ void emergenza(int rh) {
   }
   digitalWrite(4, HIGH);                  // -- abilito il motore
   // @-- velocita_crocera = velocita_crocera_COL;
-  // @-- cambiaVelocita(velocita_crocera, 1);    // -- avvio l'anta
+  // @-- cambiaVelocita(velocita_crocera, rob);    // -- avvio l'anta
   
   
   for ( int i = 0; i <= 600; i++) {        // -- avvio l'anta

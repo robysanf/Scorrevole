@@ -13,6 +13,7 @@ void Partenza_Sicura(int Direzione, int Except, int Prw) {
     }
     _Dir = 1;
     String da_scrivere = "Apri" ;
+    apertura =false;
     return;
   }
   //---------------------------------------------

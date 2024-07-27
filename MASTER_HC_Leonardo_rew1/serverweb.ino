@@ -21,6 +21,10 @@ void myhandlenotfound() {
     Partenza_Sicura(-1, 0, 0);
     Serial.println("CHIUDI");
   }
+  if ( strweb == "TEST") {                    // -- comando per CHIUDERE
+    test = !test;
+    Serial.println("TEST");
+  }
   if ( strweb == "stop") {                    // -- comando per FERMARE
     ferma_WARD();
     Serial.println("stop");
@@ -80,12 +84,16 @@ void myhandlenotfound() {
     server.send(200, "text/html", "<p><a href=\"apri\">Apri</a></p>"
                                   "<p><a href=\"stop\">Stop</a></p>"
                                   "<p><a href=\"chiu\">Chiudi</a></p>"
+                                  "<p><a href=\"TEST\">TEST DURATA Attiva - Disattiva</a></p>"
                                   "<p><a href=\"vars\">leggi le variabili</a></p>"
                                   "</p><a href=\"load\">ricarica le variabili</a></p>"
                                   "</p><a href=\"setr\">set-reset</a></p>"
                                   "</p><a href=\"XXXX\">RIPARA</a></p>"
-                                  "</p> CICLO Numero " + String(cicli_test) + " </p>");
-                                  
+                                  "</p> CICLO Numero " + String(cicli_test) + " </p>"
+                                  "</p> emergenza 6 Numero (assorbimento in cambia_velocità) = " + String(cicli_6) + " </p>"
+                                  "</p> emergenza 16 Numero (velocità) = " + String(cicli_16) + " </p>"
+                                  "</p> emergenza 55 Numero (assorbimento in acceleraziione) = " + String(cicli_55) + " </p>"
+                                  "</p> emergenza 66 Numero (assorbimento) = " + String(cicli_66) + " </p>");
   }
 }
 String urldecode(String str)

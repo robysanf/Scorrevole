@@ -19,7 +19,7 @@ void set_reset_chiudo() {  // INIZIO IL SET:
   for (i = 70; i <= TopSpeed; i = i + 1) {  // ACCELERO
     md.setM2Speed(i * motore*_Dir);
     tensione = i + 1;
-    if (limit_senza_curva(2)) { // il 2 l'ho messo perchè in acccelerazione il consumo aumenta di suo
+    if (limit_senza_curva(1)) { // il 2 l'ho messo perchè in acccelerazione il consumo aumenta di suo
       Serial.println("limit acc reset chiudo stop");
       ferma_WARD(30);
       return;
@@ -70,7 +70,7 @@ void set_reset_chiudo() {  // INIZIO IL SET:
       md.setM2Speed( v_attuale );
       Serial.print("v_attuale :");Serial.println(v_attuale);
     }
-    if (limit_senza_curva(1.1)) {
+    if (limit_senza_curva(5)) {
       ferma_WARD(30);
       break;
     }
@@ -144,7 +144,7 @@ void set_reset_apro() {  // adesso tutto è fermo di nuovo
   for (i = 70; i >= TopSpeed; i = i + 1) {  // ACCELERO
     md.setM2Speed(i * motore*_Dir);
     tensione = i + 1;
-    if (limit_senza_curva(2)) { // il 2 l'ho messo perchè in acccelerazione il consumo aumenta di suo
+    if (limit_senza_curva(1)) { // il 2 l'ho messo perchè in acccelerazione il consumo aumenta di suo
       Serial.println("limit acc reset chiudo stop");
       ferma_WARD(30);
       return;
@@ -192,7 +192,7 @@ void set_reset_apro() {  // adesso tutto è fermo di nuovo
       }
       md.setM2Speed(v_attuale + 15 * _Dir);
     }
-    if (limit_senza_curva(1.1)) {
+    if (limit_senza_curva(5)) {
       ferma_WARD(30);
       break;
     }

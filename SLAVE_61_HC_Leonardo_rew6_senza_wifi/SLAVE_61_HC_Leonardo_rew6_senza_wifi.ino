@@ -1,26 +1,25 @@
 //***************************************************
-#include "defines.h"
+
 #include "arduino_secrets.h"
 #include <SPI.h>
-#include <WiFiNINA_Generic.h>
+
 
 
 //*************************************************
 
 #include "DualMC33926MotorShield.h"
 #include "VARIABILI.h"
-#define _Aprimi_DEBUG
+
 
 DualMC33926MotorShield md;
 
-extern "C" char* sbrk(int incr);
 
 //************************************************************************
 ///////please enter your sensitive data in the Secret tab/arduino_secrets.h
 char ssid[] = SECRET_SSID;        // your network SSID (name)
 char pass[] = SECRET_PASS;        // your network password (use for WPA, or use as key for WEP), length must be 8+
 int keyIndex = 0;                 // your network key Index number (needed only for WEP)
-int status = WL_IDLE_STATUS;
+//int status = WL_IDLE_STATUS;
 unsigned int localPort = 2300 + atoi(sonoio); //61;      // local port to listen on
 char packetBuffer[255]; //buffer to hold incoming packet
 char  ReplyBuffer[255];       // a string to send back
@@ -33,7 +32,7 @@ IPAddress ipmask(255, 255, 255, 0);
 //**********************************************************************
 
 int led =  LED_BUILTIN;//pin 13 su 33 IOT
- 
+
 void setup() {
   pinMode(5, OUTPUT); // PIN PER DROP-BOLT
   pinMode(11, OUTPUT); // PIN PER HC
@@ -66,59 +65,19 @@ void setup() {
   Stato_Alzata[0] = 'I';
   //************ IMPOSTAZIONI WIFI
   //************ SE SI USA ROUTING STATICO SUL ROUTER TOGLIERE COMMENTARE WIFI.CONFIG
-  Serial.println("\nStart Client WiFiUdpSendReceiveString on " + String(BOARD_NAME));
-  /*
-  if (WiFi.status() == WL_NO_MODULE)                                       // check for the WiFi module
-  {
-    Serial.println("Communication with WiFi module failed!");
-    // don't continue
-   // while (true);
-  }
-  String fv = WiFi.firmwareVersion();
-  WiFi.config(ip);//,ipdns,ipgate,ipmask);//COMMENTARE SE ROUTING STATICO
-  if (fv < WIFI_FIRMWARE_LATEST_VERSION)
-  {
-    Serial.println("Please upgrade the firmware");
-  }
-  // print your MAC address:
-  byte mac[6];
-  WiFi.macAddress(mac);
-  Serial.print("MAC address: ");
-  printMacAddress(mac);
-
-
-  Serial.println("Connected to wifi");
-  printWifiStatus();
-  Serial.println("\nStarting connection to server...");
- */
-
 }
 
 void loop() {
-  long tempo=micros();
-/*  while (WiFi.status() != WL_CONNECTED) {
-    ferma_WARD(7);
-    Udp.stop();
-    WiFi.end();
-    WiFi.config(ip);
-    Serial.print("Attempting to connect to SSID: ");
-    Serial.println(ssid);
-    status = WiFi.begin(ssid, pass);
-    delay(500);
-    Udp.begin(localPort);
-    conteggio ++;
-    Serial.println("conteggio");
-  }*/
+  //long tempo = micros();
+
   //********* RICEVE I DATI DAL MASTER E INVIA LA STRINGA DI RISPOSTA CON LO STATO ALZATA, IL DIR, IL POS, E EVENTUALE EMERGENZA
   Ascolta_Master();
-  delay(5);
+  delay(7);
   //********** INTERPRETA LA STRINGA RICEVUTA ED ESEGUE IL RELATIVO COMANDO
   che_faccio();
+  delay(7);
   fai_media();
-  //********** STAMPA LO STATO OGNI 50 GIRI
-
-  delay(5);
-    delay(5);
+  delay(7);
   if (_Dir != 0) {
     controlla_velocita_WARD();
     // -----------------------------------------------
@@ -134,64 +93,30 @@ void loop() {
         Serial.print(" pos_dif = "); Serial.println(pos_dif);
         ferma_WARD(30);
         //devo avvisare il master che ho fermato qui
-        Stato_Anta[0] = 'S'; 
+        Stato_Anta[0] = 'S';
         // fatto
       }
       check_pos_old = pos;
     }
     // -----------------------------------------------
   }
+  delay(7);
   if (_Dir == 0) {
     for (int ic = 0; ic < 20; ic++) {
       corrente[ic] = 0;
     }
   }
+  delay(7);
   if (set == 1)
   {
     check_pos();
   }
-  delay(5);
-  if (  _Dir != 0 && limit_senza_curva(1)) {
+  delay(7);
+  if (  _Dir != 0 && limit_senza_curva(5)) {
     emergenza(66);
   }
-  delay(5);
+  delay(7);
   tensione_batteria = map(analogRead(A2), 0, 4095, 0, 3300);
   contatore = contatore + 1 ;
-  //Serial.print("Tempo = ");Serial.println(micros()-tempo);
-}
-
-
-void printWifiStatus()
-{
-  IPAddress ip = WiFi.localIP();
-  Serial.print("IP Address: ");
-  Serial.println(ip);
-  Serial.print("WIFI STATUS: "); Serial.println(WiFi.status());
-  long rssi = WiFi.RSSI();
-  Serial.print("signal strength (RSSI):");
-  Serial.println(rssi);
-}
-
-void stampaACapo(String s) {
-  stampa(s + "\n\r");
-}
-void stampa(String s)
-{
-#ifdef _Aprimi_DEBUG
-  Serial.print(s);
-#endif
-}
-
-
-void printMacAddress(byte mac[]) {
-  for (int i = 5; i >= 0; i--) {
-    if (mac[i] < 16) {
-      Serial.print("0");
-    }
-    Serial.print(mac[i], HEX);
-    if (i > 0) {
-      Serial.print(":");
-    }
-  }
-  Serial.println();
+ // Serial.print("Tempo = ");Serial.println(micros()-tempo);
 }

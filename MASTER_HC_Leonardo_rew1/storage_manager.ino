@@ -50,7 +50,7 @@ void spaccaChiaveValore(String str_line) {
       {
         switch (conversion[j].val)
         {
-          case DIPENDENTE:               dipendente = valore=="true"?1:0; Serial.print("valore = "); Serial.println(valore);break;                            // @-- Serial.print("dipendente = "); Serial.println(dipendente); break;
+          case DIPENDENTE:               dipendente = valore == "true" ? 1 : 0; Serial.print("valore = "); Serial.println(valore); break;                     // @-- Serial.print("dipendente = "); Serial.println(dipendente); break;
           case NUMERO_ANTE_SLAVE:        Numero_Ante_Slave = String(valore).toInt(); break;
           case VELOCITA_CROCERA_MAX:     velocita_crocera_MAX = String(valore).toFloat(); break;
           case VELOCITA_CROCERA_LENTA:   velocita_crocera_LENTA = String(valore).toFloat(); break;
@@ -69,6 +69,7 @@ void spaccaChiaveValore(String str_line) {
           case POS:                      //pos = String(valore).toInt(); break;
           case CADENZA:                  cadenza = String(valore).toInt(); break;
           case VELOCITA_CROCERA_COL:     velocita_crocera_COL = String(valore).toFloat(); break;
+          case SENSIBILITA:              sensibilita = String(valore).toInt(); break;
         }
         break;
       }
@@ -206,83 +207,86 @@ String stampa_storage_web(String str_line) {
         switch (conversion[j].val)
 
         { //******  le varibili qui devono essere le stesse dell enum nelle varibili.h
-          case RAGGIO:               Da_Stampare = "<td><label for=\"" + variabile + "\">" + variabile + " :</label></td>"
-                "<td><input type=\"text\" id=\"" + variabile + "\" name=\"" + variabile + "\" value=\"" + valore + "\"></td></tr>";
+          case RAGGIO:                     Da_Stampare = "<td><label for=\"" + variabile + "\">" + variabile + " :</label></td>"
+                                           "<td><input type=\"text\" id=\"" + variabile + "\" name=\"" + variabile + "\" value=\"" + valore + "\"></td></tr>";
             break;
-          case IMP:                  Da_Stampare = "<td><label for=\"" + variabile + "\">" + variabile + " :</label></td>"
-                "<td><input type=\"text\" id=\"" + variabile + "\" name=\"" + variabile + "\" value=\"" + valore + "\"></td></tr>";
+          case IMP:                        Da_Stampare = "<td><label for=\"" + variabile + "\">" + variabile + " :</label></td>"
+                                           "<td><input type=\"text\" id=\"" + variabile + "\" name=\"" + variabile + "\" value=\"" + valore + "\"></td></tr>";
             break;
-          case POS_APERTO:           Da_Stampare = "<td><label for=\"" + variabile + "\">" + variabile + " :</label></td>"
-                "<td><input type=\"text\" id=\"" + variabile + "\" name=\"" + variabile + "\" value=\"" + valore + "\"></td></tr>";
+          case POS_APERTO:                 Da_Stampare = "<td><label for=\"" + variabile + "\">" + variabile + " :</label></td>"
+                                           "<td><input type=\"text\" id=\"" + variabile + "\" name=\"" + variabile + "\" value=\"" + valore + "\"></td></tr>";
             break;
-          case POS_CHIUSO:           Da_Stampare = "<td><label for=\"" + variabile + "\">" + variabile + " :</label></td>"
-                "<td><input type=\"text\" id=\"" + variabile + "\" name=\"" + variabile + "\" value=\"" + valore + "\"></td></tr>";
+          case POS_CHIUSO:                 Da_Stampare = "<td><label for=\"" + variabile + "\">" + variabile + " :</label></td>"
+                                           "<td><input type=\"text\" id=\"" + variabile + "\" name=\"" + variabile + "\" value=\"" + valore + "\"></td></tr>";
             break;
-          case VELOCITA_BASSA:       Da_Stampare = "<td><label for=\"" + variabile + "\">" + variabile + " :</label></td>"
-                "<td><input type=\"text\" id=\"" + variabile + "\" name=\"" + variabile + "\" value=\"" + valore + "\"></td></tr>";
+          case VELOCITA_BASSA:             Da_Stampare = "<td><label for=\"" + variabile + "\">" + variabile + " :</label></td>"
+                                           "<td><input type=\"text\" id=\"" + variabile + "\" name=\"" + variabile + "\" value=\"" + valore + "\"></td></tr>";
             break;
-          case VELOCITA_MEDIA:       Da_Stampare = "<td><label for=\"" + variabile + "\">" + variabile + " :</label></td>"
-                "<td><input type=\"text\" id=\"" + variabile + "\" name=\"" + variabile + "\" value=\"" + valore + "\"></td></tr>";
+          case VELOCITA_MEDIA:             Da_Stampare = "<td><label for=\"" + variabile + "\">" + variabile + " :</label></td>"
+                                           "<td><input type=\"text\" id=\"" + variabile + "\" name=\"" + variabile + "\" value=\"" + valore + "\"></td></tr>";
             break;
-          case VELOCITA_ALTA:        Da_Stampare = "<td><label for=\"" + variabile + "\">" + variabile + " :</label></td>"
-                "<td><input type=\"text\" id=\"" + variabile + "\" name=\"" + variabile + "\" value=\"" + valore + "\"></td></tr>";
+          case VELOCITA_ALTA:              Da_Stampare = "<td><label for=\"" + variabile + "\">" + variabile + " :</label></td>"
+                                           "<td><input type=\"text\" id=\"" + variabile + "\" name=\"" + variabile + "\" value=\"" + valore + "\"></td></tr>";
             break;
-          case MOTORE:               Da_Stampare = "<td><label for=\"" + variabile + "\">" + variabile + " :</label></td>"
-                "<td><input type=\"text\" id=\"" + variabile + "\" name=\"" + variabile + "\" value=\"" + valore + "\"></td></tr>";
+          case MOTORE:                     Da_Stampare = "<td><label for=\"" + variabile + "\">" + variabile + " :</label></td>"
+                                           "<td><input type=\"text\" id=\"" + variabile + "\" name=\"" + variabile + "\" value=\"" + valore + "\"></td></tr>";
             break;
-          case ENCODER:              Da_Stampare = "<td><label for=\"" + variabile + "\">" + variabile + " :</label></td>"
-                "<td><input type=\"text\" id=\"" + variabile + "\" name=\"" + variabile + "\" value=\"" + valore + "\"></td></tr>";
+          case ENCODER:                    Da_Stampare = "<td><label for=\"" + variabile + "\">" + variabile + " :</label></td>"
+                                           "<td><input type=\"text\" id=\"" + variabile + "\" name=\"" + variabile + "\" value=\"" + valore + "\"></td></tr>";
             break;
-          case CONFIGURAZIONE:       Da_Stampare = "<td><label for=\"" + variabile + "\">" + variabile + " :</label></td>"
-                "<td><input type=\"text\" id=\"" + variabile + "\" name=\"" + variabile + "\" value=\"" + valore + "\"></td></tr>";
+          case CONFIGURAZIONE:             Da_Stampare = "<td><label for=\"" + variabile + "\">" + variabile + " :</label></td>"
+                                           "<td><input type=\"text\" id=\"" + variabile + "\" name=\"" + variabile + "\" value=\"" + valore + "\"></td></tr>";
             break;
-          case POS:                  Da_Stampare = "<td><label for=\"" + variabile + "\">" + variabile + " :</label></td>"
-                "<td><input type=\"text\" id=\"" + variabile + "\" name=\"" + variabile + "\" value=\"" + valore + "\"></td></tr>";
+          case POS:                        Da_Stampare = "<td><label for=\"" + variabile + "\">" + variabile + " :</label></td>"
+                                           "<td><input type=\"text\" id=\"" + variabile + "\" name=\"" + variabile + "\" value=\"" + valore + "\"></td></tr>";
             break;
-          case CADENZA:              Da_Stampare = "<td><label for=\"" + variabile + "\">" + variabile + " :</label></td>"
-                "<td><input type=\"text\" id=\"" + variabile + "\" name=\"" + variabile + "\" value=\"" + valore + "\"></td></tr>";
+          case CADENZA:                    Da_Stampare = "<td><label for=\"" + variabile + "\">" + variabile + " :</label></td>"
+                                           "<td><input type=\"text\" id=\"" + variabile + "\" name=\"" + variabile + "\" value=\"" + valore + "\"></td></tr>";
             break;
-          case CONSUMO_BASSA_MAX:    Da_Stampare = "<td><label for=\"" + variabile + "\">" + variabile + " :</label></td>"
-                "<td><input type=\"text\" id=\"" + variabile + "\" name=\"" + variabile + "\" value=\"" + valore + "\"></td></tr>";
+          case CONSUMO_BASSA_MAX:          Da_Stampare = "<td><label for=\"" + variabile + "\">" + variabile + " :</label></td>"
+                                           "<td><input type=\"text\" id=\"" + variabile + "\" name=\"" + variabile + "\" value=\"" + valore + "\"></td></tr>";
             break;
-          case CONSUMO_MEDIA_MAX:    Da_Stampare = "<td><label for=\"" + variabile + "\">" + variabile + " :</label></td>"
-                "<td><input type=\"text\" id=\"" + variabile + "\" name=\"" + variabile + "\" value=\"" + valore + "\"></td></tr>";
+          case CONSUMO_MEDIA_MAX:          Da_Stampare = "<td><label for=\"" + variabile + "\">" + variabile + " :</label></td>"
+                                           "<td><input type=\"text\" id=\"" + variabile + "\" name=\"" + variabile + "\" value=\"" + valore + "\"></td></tr>";
             break;
-          case CONSUMO_ALTA_MAX:     Da_Stampare = "<td><label for=\"" + variabile + "\">" + variabile + " :</label></td>"
-                "<td><input type=\"text\" id=\"" + variabile + "\" name=\"" + variabile + "\" value=\"" + valore + "\"></td></tr>";
+          case CONSUMO_ALTA_MAX:           Da_Stampare = "<td><label for=\"" + variabile + "\">" + variabile + " :</label></td>"
+                                           "<td><input type=\"text\" id=\"" + variabile + "\" name=\"" + variabile + "\" value=\"" + valore + "\"></td></tr>";
             break;
-          case DIPENDENTE:     Da_Stampare = "<td><label for=\"" + variabile + "\">" + variabile + " :</label></td>"
-                                               "<td><input type=\"text\" id=\"" + variabile + "\" name=\"" + variabile + "\" value=\"" + valore + "\"></td></tr>";
+          case DIPENDENTE:                 Da_Stampare = "<td><label for=\"" + variabile + "\">" + variabile + " :</label></td>"
+                                           "<td><input type=\"text\" id=\"" + variabile + "\" name=\"" + variabile + "\" value=\"" + valore + "\"></td></tr>";
             break;
-          case NUMERO_ANTE_SLAVE:     Da_Stampare = "<td><label for=\"" + variabile + "\">" + variabile + " :</label></td>"
-                "<td><input type=\"text\" id=\"" + variabile + "\" name=\"" + variabile + "\" value=\"" + valore + "\"></td></tr>";
+          case NUMERO_ANTE_SLAVE:          Da_Stampare = "<td><label for=\"" + variabile + "\">" + variabile + " :</label></td>"
+                                           "<td><input type=\"text\" id=\"" + variabile + "\" name=\"" + variabile + "\" value=\"" + valore + "\"></td></tr>";
             break;
-          case VELOCITA_CROCERA_MAX:     Da_Stampare = "<td><label for=\"" + variabile + "\">" + variabile + " :</label></td>"
-                "<td><input type=\"text\" id=\"" + variabile + "\" name=\"" + variabile + "\" value=\"" + valore + "\"></td></tr>";
+          case VELOCITA_CROCERA_MAX:       Da_Stampare = "<td><label for=\"" + variabile + "\">" + variabile + " :</label></td>"
+                                           "<td><input type=\"text\" id=\"" + variabile + "\" name=\"" + variabile + "\" value=\"" + valore + "\"></td></tr>";
             break;
           case VELOCITA_CROCERA_LENTA:     Da_Stampare = "<td><label for=\"" + variabile + "\">" + variabile + " :</label></td>"
-                "<td><input type=\"text\" id=\"" + variabile + "\" name=\"" + variabile + "\" value=\"" + valore + "\"></td></tr>";
+                                           "<td><input type=\"text\" id=\"" + variabile + "\" name=\"" + variabile + "\" value=\"" + valore + "\"></td></tr>";
             break;
-          case VELOCITA_CROCERA_COL:     Da_Stampare = "<td><label for=\"" + variabile + "\">" + variabile + " :</label></td>"
-                "<td><input type=\"text\" id=\"" + variabile + "\" name=\"" + variabile + "\" value=\"" + valore + "\"></td></tr>";
+          case VELOCITA_CROCERA_COL:       Da_Stampare = "<td><label for=\"" + variabile + "\">" + variabile + " :</label></td>"
+                                           "<td><input type=\"text\" id=\"" + variabile + "\" name=\"" + variabile + "\" value=\"" + valore + "\"></td></tr>";
             break;
-          case ANTE_SLAVE:     Da_Stampare = "<td><label for=\"" + variabile + "\">" + variabile + " :</label></td>"
-                                               "<td><input type=\"text\" id=\"" + variabile + "\" name=\"" + variabile + "\" value=\"" + valore + "\"></td></tr>";
+          case ANTE_SLAVE:                 Da_Stampare = "<td><label for=\"" + variabile + "\">" + variabile + " :</label></td>"
+                                           "<td><input type=\"text\" id=\"" + variabile + "\" name=\"" + variabile + "\" value=\"" + valore + "\"></td></tr>";
             break;
-          case RITARDO:     Da_Stampare = "<td><label for=\"" + variabile + "\">" + variabile + " :</label></td>"
-                                            "<td><input type=\"text\" id=\"" + variabile + "\" name=\"" + variabile + "\" value=\"" + valore + "\"></td></tr>";
+          case RITARDO:                    Da_Stampare = "<td><label for=\"" + variabile + "\">" + variabile + " :</label></td>"
+                                           "<td><input type=\"text\" id=\"" + variabile + "\" name=\"" + variabile + "\" value=\"" + valore + "\"></td></tr>";
             break;
-          case ATTRITO:     Da_Stampare = "<td><label for=\"" + variabile + "\">" + variabile + " :</label></td>"
-                                            "<td><input type=\"text\" id=\"" + variabile + "\" name=\"" + variabile + "\" value=\"" + valore + "\"></td></tr>";
+          case ATTRITO:                    Da_Stampare = "<td><label for=\"" + variabile + "\">" + variabile + " :</label></td>"
+                                           "<td><input type=\"text\" id=\"" + variabile + "\" name=\"" + variabile + "\" value=\"" + valore + "\"></td></tr>";
             break;
-          case INERZIA:     Da_Stampare = "<td><label for=\"" + variabile + "\">" + variabile + " :</label></td>"
-                                            "<td><input type=\"text\" id=\"" + variabile + "\" name=\"" + variabile + "\" value=\"" + valore + "\"></td></tr>";
+          case INERZIA:                    Da_Stampare = "<td><label for=\"" + variabile + "\">" + variabile + " :</label></td>"
+                                           "<td><input type=\"text\" id=\"" + variabile + "\" name=\"" + variabile + "\" value=\"" + valore + "\"></td></tr>";
             break;
-          case PESO:     Da_Stampare = "<td><label for=\"" + variabile + "\">" + variabile + " :</label></td>"
-                                         "<td><input type=\"text\" id=\"" + variabile + "\" name=\"" + variabile + "\" value=\"" + valore + "\"></td></tr>";
+          case PESO:                       Da_Stampare = "<td><label for=\"" + variabile + "\">" + variabile + " :</label></td>"
+                                           "<td><input type=\"text\" id=\"" + variabile + "\" name=\"" + variabile + "\" value=\"" + valore + "\"></td></tr>";
             break;
-          case ADDR:     Da_Stampare = "<td><label for=\"" + variabile + "\">" + variabile + " :</label></td>"
-                                         "<td><input type=\"text\" id=\"" + variabile + "\" name=\"" + variabile + "\" value=\"" + valore + "\"></td></tr>";
+           case SENSIBILITA:               Da_Stampare = "<td><label for=\"" + variabile + "\">" + variabile + " :</label></td>"
+                                           "<td><input type=\"text\" id=\"" + variabile + "\" name=\"" + variabile + "\" value=\"" + valore + "\"></td></tr>";
+            break;
+          case ADDR:                       Da_Stampare = "<td><label for=\"" + variabile + "\">" + variabile + " :</label></td>"
+                                           "<td><input type=\"text\" id=\"" + variabile + "\" name=\"" + variabile + "\" value=\"" + valore + "\"></td></tr>";
             break;
 
 

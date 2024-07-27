@@ -9,7 +9,7 @@ void testDurata() {
     Partenza_Sicura(1, 0, 0); Serial.print("\n APRI");
   }
   long now = millis();
-  if (now - parti < 20000 ) {
+  if (now - parti < 15000 ) {
     return;
   }
   if (test_chiudi) {
@@ -17,7 +17,7 @@ void testDurata() {
     test_chiudi = false;
   }
   else {
-    if (now - parti > 50000) {
+    if (now - parti > 35000) {
       parti = 0;
       test_alzata = 0;
       test_chiudi = true;
