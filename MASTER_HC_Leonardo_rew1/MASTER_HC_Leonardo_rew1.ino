@@ -16,13 +16,17 @@
 #include "defines.h"
 #include "arduino_secrets.h"
 #include "Variabili.h"
+#include "mysocket.h"
 #include <WiFiWebServer.h>
+#include <WebSockets2_Generic.h>
 
+using namespace websockets2_generic;
 
 #define BUFFER_SIZE     5000
 
 extern "C" char* sbrk(int incr);
-
+WebsocketsServer SocketsServer;
+WebsocketsClient* client = NULL;
 
 WiFiWebServer server(80);
 
