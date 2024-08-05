@@ -54,24 +54,13 @@ void myhandlenotfound() {
   }
   if ( strweb == "SaVe") {                    // -- comando per CARICARE MANUALMENTE LA STRINGA
     salva_dati_emergenza();
-    server.send(200, "text/html", "<!DOCTYPE html>"
-                                  "<html>"
-                                  "<body>"
-                                  "<h2>RECUPERO DI EMERGENZA EFFETTUATO</h2><br>"
-                                  "<p><a href=\"stop\">Torna al Menu</a></p>"
-                                  "</body>"
-                                  "</html>");
+   
   }
   if ( strweb == "setr") {                    // -- comando per CARICARE rifare il set-reset
     set = 0;
     chiedo_conf = true;
     Serial.println("***************************RIAVVIO 2********************************");
-    server.send(200, "text/html", "<!DOCTYPE html>"
-                                  "<html>"
-                                  "<body>"
-                                  "<p><a href=\"stop\">Torna al Menu</a></p>"
-                                  "</body>"
-                                  "</html>");
+   
   }
   if ( strweb == "vars") {                    // -- comando per VEDERE LE VARIABILI
     //Stop(5);

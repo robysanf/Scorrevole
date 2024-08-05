@@ -76,8 +76,6 @@ void setup()
     Serial.println("Please upgrade the firmware");
   }
 
-
-
   Serial.print("Creating access point named: "); Serial.println(ssid);
   WiFi.config(ip); // ************************************** commentare questa riga se si definisce l'IP nel route statico del Mango
   status = WiFi.beginAP(ssid, pass);
@@ -85,7 +83,9 @@ void setup()
   server.begin();
   Serial.print(F("HTTP server started @ "));
   Serial.println(WiFi.localIP());
-        
+  ///*************** WEBSOCKET ++++++++++++++++++++
+  SocketsServer.listen(WEBSOCKETS_PORT);      
+ 
  WiFiStorageFile file = WiFiStorage.open("/fs/config");
   //file.erase(); //SCOMMENTARE SE SI VUOLE RESETTARE LO STORAGE E POI RICOMMENTARE
 if (file) {
@@ -100,8 +100,16 @@ if (file) {
 
 String inputString = "";         // a String to hold incoming data
 bool stringComplete = false;  // whether the string is complete
-
 void loop() {
+  if ( chiedo_conf ) {                                               // -- al primo giro di vita parto con il setup se già impostato altrimenti entro in loop con set==0
+    chiedo_configurazioni();
+    chiedo_conf = !chiedo_conf;
+  }
+     ascolta_sock();
+     delay(300);
+     Serial.println("s");
+  }
+void loopor() {
   //long tempo = micros();
   serialEvent();
   if (stringComplete) {
@@ -127,7 +135,8 @@ void loop() {
   
   server.handleClient();                                             // -- controllo il web
   delay(1);
-  ascolta_web();                                                     // -- controllo il web
+  //ascolta_web();
+  ascolta_sock();// -- controllo il web
   if ( riavvio_slave_avvenuto ) {                                    // -- rifaccio il set_reset_ridotto(); se uno slave si riavvia
     riavvio_slave_avvenuto = false;
     set = 0;

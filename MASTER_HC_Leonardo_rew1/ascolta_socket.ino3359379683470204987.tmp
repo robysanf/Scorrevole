@@ -84,9 +84,12 @@ void ascolta_sock() {
      /* risposta = "IMP=" + String(imp) + "#POS_APERTO=" + longArrayToString(pos_aperto) + "#POS_CHIUSO=" + String(pos_chiuso)+ "#VELOCITA_BASSA=" + String(velocita_crocera_LENTA) +
                  + "#ENCODER=" + stringArrayToString(encoder) + "#MOTORE=" + stringArrayToString(motore) + "#CONFIGURAZIONE=" + String(configurazione) + "#pos=" + longArrayToString(Pos_Anta) + "#CADENZA=" + String(cadenza)
                  + "#CONSUMO_BASSA_MAX=" + String(consumo_Bassa_max) + "#CONSUMO_MEDIA_MAX=" + String(consumo_Media_max) + "#CONSUMO_ALTA_MAX=" + String(consumo_Alta_max);*/
-   Numero_Ante_Slave=2;  // da eliminare serve solo per test
-    risposta = "IMP=" + String(imp) + "#POS_APERTO=" + longArrayToString(pos_aperto,Numero_Ante_Slave) + "#POS_CHIUSO=" + String(pos_chiuso)+ "#VELOCITA_BASSA=" + String(velocita_crocera_LENTA) +
-                 + "#ENCODER=" + stringArrayToString(encoder,Numero_Ante_Slave) + "#MOTORE=" + stringArrayToString(motore,Numero_Ante_Slave) + "#CONFIGURAZIONE=" + String(configurazione) ;
+    
+     Serial.print("size"); Serial.println(sizeof(pos_aperto));
+    Serial.print("var1"); Serial.println(pos_aperto[0]);
+    Serial.print("var2"); Serial.println(pos_aperto[1]);
+    Serial.print("var3"); Serial.println(pos_aperto[2]);
+    risposta = "IMP=" + String(imp) + "#POS_APERTO=" + longArrayToString(pos_aperto);
     Serial.print("risposta"); Serial.println(risposta);
      
       client->send(risposta);
@@ -101,24 +104,18 @@ void ascolta_sock() {
   }
 }
 
-String longArrayToString(long var_array[],int size) {
+String longArrayToString(long var_array[]) {
   String s="";
-  for(int i=1;i<=size;i++){
-      String s_t=String(var_array[i]);
-      Serial.print("s_t "); Serial.println(s_t);
-      if(s_t!=NULL && s_t!="")
-          s=s+String(var_array[i])+",";
+  for(int i=1;i<sizeof(var_array);i++){
+    Serial.print("var"); Serial.println(var_array[i]);
+     s=s+String(var_array[i])+",";
     }
-    return s.substring(0,s.length()-1);
+    s=s.substring(0,s.length()-1);
 }
-
-String stringArrayToString(String var_array[], int size) {
+String stringArrayToString(String var_array[]) {
   String s="";
-  for(int i=1;i<=size;i++){
-      String s_t=String(var_array[i]);
-      Serial.print("s_t "); Serial.println(s_t);
-      if(s_t!=NULL && s_t!="")
-          s=s+String(var_array[i])+",";
+  for(int i=1;i<sizeof(var_array);i++){
+     s=s+String(var_array[i])+",";
     }
-    return s.substring(0,s.length()-1);
+    s=s.substring(0,s.length()-1);
 }

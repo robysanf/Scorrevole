@@ -44,7 +44,7 @@ void Abbina_Pacchetto(String varList) {
   if (num_anta == 0) {
     return;
   }
-  // not_packet[num_anta] = 0;
+  
   //Serial.print(" sono_io_slave = ");Serial.println(sono_io_slave);
   pch = strtok (NULL, ","); // STATO ANTA
 

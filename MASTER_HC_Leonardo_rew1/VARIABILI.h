@@ -1,6 +1,3 @@
-String pathlog = "log.htm";
-int step_del_log = 25;
-//int not_packet=0;
 IPAddress ip(192, 168, 81, 90);
 int wait = 10;
 int set = 0;                              // SET_UP FATTO OPPURE NO
@@ -8,11 +5,8 @@ int _Dir = 0;                             // INDICA LA DIREZIONE
 int emergenza_dir = 0;
 String emerg[10];
 int emergenza_chi = 0;
-String limiti[12];
-int Previus_Dir = 0;                      // USATO PER IL LETTORE DI CARTE
+String limiti[12];                     
 const int MAX_ANTE = 9;
-String ip_prefix = "192.168.81.";
-String port_prefix = "23";
 int conta = 0;                            // -- per rallentare il dime nel loop
 
 boolean chiedo_conf = true;
@@ -25,13 +19,8 @@ int stato_CHIUDI = 0;                     // INDICA SE IL PIN CHIUDI E PREMUNTO
 int stato_STOP = 0;                       // INDICA SE IL PIN STOP E PREMUNTO
 String str = "";
 
-long tempo_pulsante_1 = 0 ;      // PER TEMPORIZZARE I PULSANTI
-long tempo_pulsante_2 = 0 ;      // PER TEMPORIZZARE I PULSANTI
-long tempo_pulsante_3 = 0 ;      // PER TEMPORIZZARE I PULSANTI
 long T_scemo_1 = 0 ;             // PER TEMPORIZZARE I PULSANTI
 long T_scemo_2 = 0 ;             // PER TEMPORIZZARE I PULSANTI
-long Tempo_C_U_P = 0 ;           // PER TEMPORIZZARE I PULSANTI
-
 int _Pulsanti = 1010;            // PER TEMPORIZZARE I PULSANTI
 boolean U_P = false;              // UOMO PRESENTE di default
 
@@ -53,6 +42,17 @@ float velocita_crocera_MAX = 70;                // VELOCITA' MASSIMA IN cm/sec
 float velocita_crocera_MIN = 30;                // VELOCITA' LENTO IN cm/sec
 float velocita_crocera_LENTA = 50;              // -- VELOCITA' DELL'ANTA PIU' LENTA
 float velocita_crocera_MAX_slave_[10];
+
+
+
+int consumo_Bassa = 300;
+int consumo_Media = 600;
+int consumo_Alta = 900;
+int consumo_max_crocera = 0;
+int consumo_Bassa_max = 1200;
+int consumo_Media_max = 1800;
+int consumo_Alta_max = 2000;
+
 
 //int conteggio = 0;                        // per il spingi e vai
 boolean solopassaggio = false;            // per l'apertura parziale
@@ -86,8 +86,6 @@ String Stato_Anta_old[10];
 int Direzione_Anta[10];
 String Stato_Alzata[10];
 long Pos_Anta[10];
-int portaRemota[10];
-String cliEnt[10];
 String Comando[10] = {"0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000"};
 String Risposta_Comando[10];
 boolean emergenza = false;
@@ -137,7 +135,6 @@ const int CONSENSO_in_scrittura = 5;        // -- VALORE DEL PIN PER RICEVERE VI
 
 //-------------------
 boolean apertura = false;
-boolean uno_giu = false;
 int time_strwebHostOld = 0;                // -- per resettare il comando web vecchio
 
 
@@ -169,8 +166,7 @@ boolean log_time = true;
 String Batteria_Tensione[10];
 boolean riavvio_slave_avvenuto = false;   // -- se uno slave si riavvia per conto suo rifaccio il set_reset_ridotto();
 long tempo_invia = 0;
-int not_packet[10];
 String emergenza_buffer = "";
 String Dime = "0000";
 String configurazione = "false";
-String init_param = "IMP=23.46#DIPENDENTE=false#NUMERO_ANTE_SLAVE=1#VELOCITA_CROCERA_LENTA=70#ENCODER=-1#INERZIA=4#POS_APERTO=33000#CONFIGURAZIONE=true#VELOCITA_CROCERA_MAX=250#VELOCITA_CROCERA_COL=80#ATTRITO=0.75#RITARDO=1.00#MOTORE=1#PESO=30#ANTE_SLAVE=62#SENSIBILITA=4€aperdere ";
+String init_param = "IMP=23.46#DIPENDENTE=false#NUMERO_ANTE_SLAVE=2#VELOCITA_CROCERA_LENTA=70#ENCODER=-1,-1#INERZIA=4,4#POS_APERTO=33000,10000#CONFIGURAZIONE=true#VELOCITA_CROCERA_MAX=250#VELOCITA_CROCERA_COL=80#ATTRITO=0.75,0.75#RITARDO=1.00,1.00#MOTORE=1,1#PESO=30,30#ANTE_SLAVE=61,62#SENSIBILITA=4€aperdere ";

@@ -62,7 +62,7 @@ void spaccaChiaveValore(String str_line) {
           case INERZIA:                  stringaToIntArray(valore, inerzia); break;
           case PESO:                     stringaToIntArray(valore, peso); break;
           case ADDR:                     stringaToIntArray(valore, addr); break;                          // @-- Serial.print("\n addr= "); Serial.print(String( addr[cont]));
-          case POS_APERTO:               stringaToLongArray(valore, pos_aperto); break;
+          case POS_APERTO:               Serial.print(" posaperto: "); Serial.println(valore);stringaToLongArray(valore, pos_aperto); break;
           case IMP:                      imp = String(valore).toFloat(); break;
           case POS_CHIUSO:               pos_chiuso = String(valore).toInt(); break;
           case CONFIGURAZIONE:           configurazione = (valore); break;
@@ -188,6 +188,8 @@ String Storage_Read_Web() {
   Serial.print("da stampare = "); Serial.println( stampa);
   return stampa;
 }
+
+
 String stampa_storage_web(String str_line) {
   String Da_Stampare = "";
   // Serial.print(" str_lineweb: ");Serial.println(str_line);
@@ -312,17 +314,13 @@ void Storage_SaveAll(String value) {
   Serial.println(file.size());
   file.close();
 }
+
+
 void salva_dati() {
-
   String message = "";
-
   for (int i = 0; i <= server.args(); i++) {
-
-
     message += server.argName(i) + "=";            //Get the name of the parameter
     message += server.arg(i) + "#";              //Get the value of the parameter
-
-
   }
   message = message.substring(0, message.length() - 1);
   Serial.print("salvo = "); Serial.println(message);

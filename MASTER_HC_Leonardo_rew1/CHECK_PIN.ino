@@ -99,7 +99,6 @@ if (U_P == false && set == 1){
                 solopassaggio = true;                                                  // -- SE SUPERO IL TEMPO APRO CON EASY_PASS
                 Partenza_Sicura(1,2,0);
                 _Dir = 1;
-                // #-- Previus_Dir = _Dir;
                 delay(50);
                 stato_APRI = 1;
                 break;
