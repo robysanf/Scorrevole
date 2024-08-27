@@ -4,12 +4,12 @@
     grid-template-columns: 50% 40%;
     /*grid-template-rows: 100px 100px;*/
     background-color: #2196F3;
-     width: 80%; 
+    /* width: 80%; */
     padding: 10px;
-	position:absolute;
+	/*position:absolute;
 	top:142px;
-	align-content: stretch;
-	justify-content: end;
+	/*align-content: stretch;*/
+	/*justify-content: end;*/
 }
 .grid-item {
   background-color: rgba(255, 255, 255, 0.8);
@@ -28,11 +28,12 @@ input[type=text], select {
   border: 1px solid #ccc;
   border-radius: 4px;
   box-sizing: border-box;
+  font-size: 150%;
 }
 
 p.textsize {
-width: 100%;
- /* font-size:5vw;*/
+width: 10%;
+  font-size:150%;
   text-align:center;
   padding: 0 0;
  
@@ -147,7 +148,7 @@ img {vertical-align: middle;}
   color: #f2f2f2;
   font-size: 100%;
   padding: 8px 12px;
-  position: absolute;
+  /*position: absolute;*/
   top: 10%;
   width: 100%;
   text-align: center;

@@ -18,7 +18,7 @@ void ascolta_sock() {
       Serial.print("strwebhost "); Serial.println(strwebHost);
       String strweb = strwebHost.substring(0, 4);
       String strweb2 = strwebHost.substring(4);
-  /*   
+     
       if ( strweb == "apri") {
         Partenza_Sicura(1, 0, 0);
         Serial.println("APRI");
@@ -79,7 +79,7 @@ void ascolta_sock() {
     server.send(200, "text/html", Storage_Read_Web());
   }
       //qui devono essere passati i nomi delle variabili esatti perchè poi vengono rispediti cosi all'arduino
-    */  String risposta = "";
+      String risposta = "";
 // okkio agli array
      /* risposta = "IMP=" + String(imp) + "#POS_APERTO=" + longArrayToString(pos_aperto) + "#POS_CHIUSO=" + String(pos_chiuso)+ "#VELOCITA_BASSA=" + String(velocita_crocera_LENTA) +
                  + "#ENCODER=" + stringArrayToString(encoder) + "#MOTORE=" + stringArrayToString(motore) + "#CONFIGURAZIONE=" + String(configurazione) + "#pos=" + longArrayToString(Pos_Anta) + "#CADENZA=" + String(cadenza)
