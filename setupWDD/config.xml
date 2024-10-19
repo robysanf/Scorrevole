@@ -2,10 +2,10 @@
 <widget id="org.apache.cordova.wdd" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>SetUpWDD</name>
     <description>Sample Apache Cordova App</description>
-    <author email="dev@cordova.apache.org" href="https://cordova.apache.org">
-        Apache Cordova Team
+    <author email="roberto.sanfelici@wddmail.com" href="https://www.windowsdigitaldriver.com">
+        Windows Digital Driver srl
     </author>
-    <content src="http://localhost/index.html" />
+    <content src="http://localhost/test.html" />
    <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
 <edit-config 

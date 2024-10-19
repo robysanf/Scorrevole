@@ -73,6 +73,16 @@ function chiudi() {
  
 }
 
+function stop() {
+  send("stop");
+ 
+}
+
+function vars() {
+  send("VARS");
+ 
+}
+
 function test() {
   send("TEST");
  
