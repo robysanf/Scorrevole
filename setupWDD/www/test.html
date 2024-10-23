@@ -1,142 +1,147 @@
 <!DOCTYPE html>
 <html>
-<head>
-
- <meta charset="utf-8">
-       <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline';
-			script-src 'self' http://192.168.81.90:8080 'unsafe-inline' 'unsafe-eval'; connect-src ws://192.168.81.90:8080 wss://192.168.81.90:8080 ">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline';
+		script-src 'self' http://192.168.1.90:8080 'unsafe-inline' 'unsafe-eval'; connect-src ws://192.168.1.90:8080 wss://192.168.1.90:8080 ">
         <meta name="format-detection" content="telephone=no">
         <meta name="msapplication-tap-highlight" content="no">
         <meta name="viewport" content="initial-scale=1.0, width=device-width, viewport-fit=cover">
         <meta name="color-scheme" content="light dark">
         <link rel="stylesheet" href="css/index.css">
 		<link rel="stylesheet" href="css/wdd.css">
+		<link rel="stylesheet" href="css/grid.css">
+		<link rel="stylesheet" href="css/form.css">
+		<link rel="stylesheet" href="css/modal.css">
         <title>WDD SETUP</title>
-   
-<style>
-* {
-  box-sizing: border-box;
-}
+		
+	</head>
+	
+	<script src="cordova.js"></script>    
+	<script src="js/index.js"></script >
+	<script src="js/socket.js"></script>
+	<script src="js/wdd.js"></script>
+	<script  src="js/modal.js"></script>
+	<script  src="js/db.js"></script>
+	<script src="js/mongo/collection.mongogx.js"></script>
+	<script  src="js/mongo/database.mongogx.js"></script>
+	<script  src="js/mongo/core.mongogx.js"></script>
+	
+	<body>
+		
+		<div class="header">
+			<h1>W.D.D.</h1>
+			<div id="connection" style="height:40px;font-size:57%;position:absolute;top:-4px">
+				<p style="color:#F75535;">
+					<svg fill="none" version="1.1" width="15px" height="15px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="m12 17.435c-0.9281 0-1.68 0.7548-1.68 1.6811 0 0.9262 0.7519 1.6776 1.68 1.6776 0.9274 0 1.68-0.7514 1.68-1.6776 0-0.9263-0.7526-1.6811-1.68-1.6811zm11.744-7.9502c-2.9324-3.4845-7.2128-5.4847-11.743-5.4847-4.5306 0-8.8119 2.0002-11.744 5.4847-0.38904 0.46375-0.32785 1.1548 0.13607 1.5437 0.20274 0.1716 0.45297 0.2565 0.70228 0.2565 0.31416 0 0.62466-0.1315 0.83836-0.388 2.5151-2.9924 6.1827-4.7078 10.068-4.7078 3.8813 0 7.5516 1.7153 10.067 4.7042 0.2137 0.2601 0.5242 0.3916 0.8384 0.3916 0.2493 0 0.4995-0.0849 0.7032-0.2565 0.463-0.3889 0.5242-1.08 0.1351-1.5437zm-11.743-1.1019c-3.2356 0-6.2932 1.4259-8.3872 3.9154-0.38904 0.4638-0.33151 1.1548 0.13242 1.5437 0.20639 0.1716 0.45662 0.2565 0.70594 0.2565 0.3105 0 0.62101-0.1314 0.83836-0.3879 1.6767-1.9938 4.1206-3.1386 6.7105-3.1386 2.59 0 5.0329 1.1448 6.7096 3.1386 0.2183 0.2565 0.5279 0.3879 0.8384 0.3879 0.2502 0 0.4995-0.0812 0.7068-0.2565 0.464-0.3889 0.5242-1.0799 0.1315-1.5437-2.094-2.4894-5.1507-3.9154-8.3863-3.9154zm0 4.3828c-1.9443 0-3.7781 0.8554-5.0338 2.3498-0.38904 0.4601-0.32785 1.1512 0.13516 1.5401 0.20366 0.1752 0.45297 0.2574 0.7032 0.2574 0.31416 0 0.62375-0.1324 0.84201-0.3889 0.83471-0.9987 2.0584-1.5693 3.3534-1.5693s2.5178 0.5706 3.3525 1.5693c0.2183 0.2565 0.5288 0.3889 0.842 0.3889 0.2503 0 0.4996-0.0822 0.7032-0.2574 0.464-0.3889 0.5242-1.08 0.1352-1.5401-1.2557-1.4944-3.0886-2.3498-5.0329-2.3498z" clip-rule="evenodd" fill="#F75535" fill-rule="evenodd"/></svg> Disconnected
+				</p>
+				
+			</div>
+			<div id="impostazioni" style="height:40px;font-size:57%;position:absolute;top:3px;left:80%">
+				<p style="color:#F75535;">
+					<svg viewBox="0 0 500 500" width="48px" height="48px" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient gradientUnits="userSpaceOnUse" x1="305.687" y1="373.921" x2="305.687" y2="378.424" id="gradient-0" gradientTransform="matrix(8.10829, 0, 0, 7.695771, -2282.734863, -2721.471406)"><stop offset="0" style="stop-color: rgb(84.706% 84.706% 84.706%)"></stop><stop offset="1" style="stop-color: rgb(48.42% 48.42% 48.42%)"></stop></linearGradient><linearGradient gradientUnits="userSpaceOnUse" x1="318.286" y1="378.069" x2="318.286" y2="382.572" id="gradient-1" gradientTransform="matrix(7.820407, -0.000001, -0.000001, 7.979062, 0.00006, 0.000002)"><stop offset="0" style="stop-color: rgb(84.706% 84.706% 84.706%)"></stop><stop offset="1" style="stop-color: rgb(48.42% 48.42% 48.42%)"></stop></linearGradient><linearGradient gradientUnits="userSpaceOnUse" x1="318.286" y1="378.069" x2="318.286" y2="382.572" id="gradient-2" gradientTransform="matrix(7.800946, 0.000001, -0.000001, 7.998977, -0.001232, -0.000087)"><stop offset="0" style="stop-color: rgb(84.706% 84.706% 84.706%)"></stop><stop offset="1" style="stop-color: rgb(48.42% 48.42% 48.42%)"></stop></linearGradient><linearGradient gradientUnits="userSpaceOnUse" x1="305.703" y1="399.794" x2="305.703" y2="404.297" id="gradient-3" gradientTransform="matrix(8.10829, 0, 0, 7.695771, -2282.734863, -2706.079864)"><stop offset="0" style="stop-color: rgb(84.706% 84.706% 84.706%)"></stop><stop offset="1" style="stop-color: rgb(48.42% 48.42% 48.42%)"></stop></linearGradient><linearGradient gradientUnits="userSpaceOnUse" x1="318.286" y1="378.069" x2="318.286" y2="382.572" id="gradient-4" gradientTransform="matrix(7.820407, -0.000001, -0.000001, 7.979062, 0.000344, -0.000145)"><stop offset="0" style="stop-color: rgb(84.706% 84.706% 84.706%)"></stop><stop offset="1" style="stop-color: rgb(48.42% 48.42% 48.42%)"></stop></linearGradient><linearGradient gradientUnits="userSpaceOnUse" x1="318.286" y1="378.069" x2="318.286" y2="382.572" id="gradient-5" gradientTransform="matrix(7.776741, 0.000002, -0.000001, 8.023864, -0.001247, -0.001577)"><stop offset="0" style="stop-color: rgb(84.706% 84.706% 84.706%)"></stop><stop offset="1" style="stop-color: rgb(48.42% 48.42% 48.42%)"></stop></linearGradient></defs><rect x="166.658" y="156.139" width="58.42" height="34.654" style="fill: url(&quot;#gradient-0&quot;); stroke: rgb(213, 213, 213);"></rect><rect x="166.78" y="370.643" width="58.42" height="34.654" style="fill: url(&quot;#gradient-3&quot;); stroke: rgb(213, 213, 213);"></rect><rect x="2460.956" y="3016.636" width="56.346" height="35.93" style="fill: url(&quot;#gradient-1&quot;); stroke: rgb(213, 213, 213); transform-box: fill-box; transform-origin: 50% 50%;" transform="matrix(0.564688, 0.825304, -0.852253, 0.525302, -2199.21259, -2806.129959)"></rect><rect x="2460.956" y="3016.636" width="56.346" height="35.93" style="fill: url(&quot;#gradient-4&quot;); stroke: rgb(213, 213, 213); transform-origin: 2489.13px 3034.6px;" transform="matrix(0.564688, 0.825304, -0.852253, 0.525302, -2380.746283, -2693.715747)"></rect><rect x="2447.216" y="3033.574" width="56.031" height="36.131" style="fill: url(&quot;#gradient-5&quot;); stroke: rgb(213, 213, 213); transform-origin: 2475.23px 3051.64px;" transform="matrix(-0.45706, 0.889436, -0.908251, -0.420446, -2375.455745, -2822.469847)"></rect><rect x="2454.834" y="3024.165" width="56.206" height="36.019" style="fill: url(&quot;#gradient-2&quot;); stroke: rgb(213, 213, 213); transform-origin: 2482.93px 3042.18px;" transform="matrix(-0.519699, 0.85435, -0.877861, -0.481047, -2194.303247, -2706.715968)"></rect><ellipse style="fill: rgb(216, 216, 216); stroke: rgb(213, 213, 213);" cx="198.402" cy="279.879" rx="92.199" ry="89.81"></ellipse><ellipse style="stroke: rgb(0, 0, 0); fill: rgb(250, 248, 248);" cx="198.402" cy="279.879" rx="70" ry="66.303"></ellipse><ellipse style="stroke: rgb(0, 0, 0);" cx="198.4" cy="279.9" rx="20" ry="20"></ellipse>
+					</svg>
+				</p>
+			</div>
+			
+			
+			<div id="userid" style="height:40px;width:200px;font-size:15px;position:absolute;top: 19px;left: 3%;color: white;">
+			</div>
+		</div>
+		<div id="central" class="row">
+			<div class="col-3 menu">
+				<ul>
+					<li onclick="javascript:set_reset();">Set Reset</li>
+					<li onclick="javascript:set();">Visualizza Variabili</li>
+					<li onclick="javascript:apri();">Apri</li>
+					<li onclick="javascript:chiudi();">Chiudi</li>
+					<li onclick="javascript:stop();">Stop</li>
+					<li onclick="javascript:test();">TEST DURATA Attiva - Disattiva</li>
+					<li>ricarica le variabili</li>
+					<li>RIPARA</li>
+					
+				</ul>
+				</div>
+				
+				<div class="col-9">
+					<div id="message" class="connection" style="height:20px;">&nbsp;</div>
+					<div class="grid-container" id="gridContainer">
+						
+					</div>
+					<h1>The City</h1>
+					<p>Chania is the capital of the Chania region on the island of Crete. The city can be divided in two parts, the old town and the modern city.</p>
+					<p>Resize the browser window to see how the content respond to the resizing.</p>
+				</div>
+			</div>
+			<div id="txt_com" class="connection" style="height:20px; position: absolute;top: 85px;left: 100px;"></div>    
+			<div id ="appwdd" class="app">
+				
+				
+				<div id="deviceready" class="blink">
+					<!--p class="event listening">Connecting to Device</p>
+					<p class="event received">Device is Ready</p-->........................
+				</div>  
+				<div class="imgcontainer">
+					<img src="img/WDDLogo.png" alt="Avatar" class="avatar">
+				</div>
+				<!--    ****************     LOGIN  *****************************-->
+				<div id="login" class="container" >
+					<label for="uname"><b>Username</b></label>
+					<input type="text" placeholder="Enter Username" name="uname" id="name" required>
+					
+					<label for="psw"><b>Password</b></label>
+					<input type="password" placeholder="Enter Password" name="psw" id="psw" required>
+					
+					<button type="submit" id="btn_login">Login</button>
+					<label>
+						<input type="checkbox" checked="checked" name="remember"> Remember me
+					</label>
+				
+				
+				<div class="container" style="background-color:#f1f1f1">
+					<button type="button" id="btn_new" class="registerbtn">Register</button>
+					<span class="psw">Forgot <a href="#">password?</a></span>
+				</div>
+				</div>
+				<!--    ****************     REGISTRAZIONE  *****************************-->
+				
+				<div id="register" class="container_register" style="visibility: hidden;">
+					<h1>Sign Up</h1>
+					<p>Please fill in this form to create an account.</p>
+					<hr>
+					<label for="email"><b>Email</b></label>
+					<input type="text" placeholder="Enter Email" name="email" id="email" required>
+					
+					<label for="username"><b>Username</b></label>
+					<input type="text" placeholder="Enter Username" name="username" id="username" required>
+					
+					<label for="psw_reg"><b>Password</b></label>
+					<input type="password" placeholder="Enter Password" name="psw_reg" id="psw_reg" required>
+					
+					<label for="psw_reg_repeat"><b>Repeat Password</b></label>
+					<input type="password" placeholder="Repeat Password" name="psw_reg_repeat" id="psw_reg_repeat" required>
+					
+					<label>
+						<input type="checkbox" checked="checked" name="remember" style="margin-bottom:15px"> Remember me
+					</label>
+					
+					<p>By creating an account you agree to our <a href="#" style="color:dodgerblue">Terms & Privacy</a>.</p>
+					
+					<div class="clearfix">
+					<!--button type="button"  class="cancelbtn">Cancel</button-->
+						<button type="submit" id="btn_register" class="signupbtn">Sign Up</button>
+					</div>
+				</div>
+				
+			</div>
+			<div id="myModal" class="modal">
 
-.row::after {
-  content: "";
-  clear: both;
-  display: table;
-}
-
-[class*="col-"] {
-  float: left;
-  padding: 3px;
-}
-
-.col-1 {width: 8.33%;}
-.col-2 {width: 16.66%;}
-.col-3 {width: 25%;}
-.col-4 {width: 33.33%;}
-.col-5 {width: 41.66%;}
-.col-6 {width: 50%;}
-.col-7 {width: 58.33%;}
-.col-8 {width: 66.66%;}
-.col-9 {width: 75%;}
-.col-10 {width: 83.33%;}
-.col-11 {width: 91.66%;}
-.col-12 {width: 100%;}
-
-html {
-  font-family: "Lucida Sans", sans-serif;
-}
-
-.header {
-  background-color: #172fd9;
-  color: #ffffff;
-  padding: 15px;
-}
-
-.menu ul {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-}
-
-.menu li {
-  padding: 8px;
-  margin-bottom: 7px;
-  background-color: #33b5e5;
-  color: #ffffff;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
-}
-
-.menu li:hover {
-  background-color: #0099cc;
-}
-</style>
-</head>
-    </head>
-
-		<script src="cordova.js"></script>    
-        <script src="js/index.js"></script >
-		 <script src="js/socket.js"></script>
-		 <script src="js/wdd.js"></script>
-<body>
-
-
-<div class="header">
-  <h1>W.D.D.</h1>
-<div id="connection" class="connection" style="height:40px;">
-<p style="color:#F75535;"><svg fill="none" version="1.1" width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="m12 17.435c-0.9281 0-1.68 0.7548-1.68 1.6811 0 0.9262 0.7519 1.6776 1.68 1.6776 0.9274 0 1.68-0.7514 1.68-1.6776 0-0.9263-0.7526-1.6811-1.68-1.6811zm11.744-7.9502c-2.9324-3.4845-7.2128-5.4847-11.743-5.4847-4.5306 0-8.8119 2.0002-11.744 5.4847-0.38904 0.46375-0.32785 1.1548 0.13607 1.5437 0.20274 0.1716 0.45297 0.2565 0.70228 0.2565 0.31416 0 0.62466-0.1315 0.83836-0.388 2.5151-2.9924 6.1827-4.7078 10.068-4.7078 3.8813 0 7.5516 1.7153 10.067 4.7042 0.2137 0.2601 0.5242 0.3916 0.8384 0.3916 0.2493 0 0.4995-0.0849 0.7032-0.2565 0.463-0.3889 0.5242-1.08 0.1351-1.5437zm-11.743-1.1019c-3.2356 0-6.2932 1.4259-8.3872 3.9154-0.38904 0.4638-0.33151 1.1548 0.13242 1.5437 0.20639 0.1716 0.45662 0.2565 0.70594 0.2565 0.3105 0 0.62101-0.1314 0.83836-0.3879 1.6767-1.9938 4.1206-3.1386 6.7105-3.1386 2.59 0 5.0329 1.1448 6.7096 3.1386 0.2183 0.2565 0.5279 0.3879 0.8384 0.3879 0.2502 0 0.4995-0.0812 0.7068-0.2565 0.464-0.3889 0.5242-1.0799 0.1315-1.5437-2.094-2.4894-5.1507-3.9154-8.3863-3.9154zm0 4.3828c-1.9443 0-3.7781 0.8554-5.0338 2.3498-0.38904 0.4601-0.32785 1.1512 0.13516 1.5401 0.20366 0.1752 0.45297 0.2574 0.7032 0.2574 0.31416 0 0.62375-0.1324 0.84201-0.3889 0.83471-0.9987 2.0584-1.5693 3.3534-1.5693s2.5178 0.5706 3.3525 1.5693c0.2183 0.2565 0.5288 0.3889 0.842 0.3889 0.2503 0 0.4996-0.0822 0.7032-0.2574 0.464-0.3889 0.5242-1.08 0.1352-1.5401-1.2557-1.4944-3.0886-2.3498-5.0329-2.3498z" clip-rule="evenodd" fill="#F75535" fill-rule="evenodd"/></svg> Disconnected</p>
-</div>
-</div>
-
-<div class="row">
-  <div class="col-3 menu">
-    <ul>
-      <li onclick="javascript:set_reset();">Set Reset</li>
-      <li onclick="javascript:set();">Visualizza Variabili</li>
-      <li onclick="javascript:apri();">Apri</li>
-      <li onclick="javascript:chiudi();">Chiudi</li>
-	  <li onclick="javascript:stop();">Stop</li>
-	  <li onclick="javascript:test();">TEST DURATA Attiva - Disattiva</li>
-	  <li>ricarica le variabili</li>
-	  <li>RIPARA</li>
-	  
-    </ul>
+  <!-- Modal content -->
+  <div id="divmodal" class="modal-content">
+    <span class="close">&times;</span>
+    <p id="modalmsg" ></p>
   </div>
 
-  <div class="col-9">
-  	 <div id="message" class="connection" style="height:20px;">&nbsp;</div>
-	
-      <div id ="appwdd" class="app">
-		    <h1>W D D</h1>
-			 
-			  <div id="deviceready" class="blink">
-                <p class="event listening">Connecting to Device</p>
-                <p class="event received">Device is Ready</p>
-            </div>
-		 <div style="width:90%; height:100%; margin-left:10%;">
-		  <p style="font-size:1.5vw;">RESPONSE</p>
-		  <textarea name="websocket" id="websocket" class="websocket" rows="10" cols="30" style="width:90%;" readonly></textarea>
-		  <button value="go" onclick="javascript:send();">invia</button>
-		  <button value="go" onclick="javascript:send('apri');">APRI</button>
-		  <button value="go" onclick="javascript:send('chiu');">CHIUDI</button>
-		  <button value="go" onclick="javascript:send('stop');">STOP</button>
-		  <div id="txt_com" class="connection" style="height:20px;"></div>
-		 </div>  
-     </div>
-	
-  
-   <div class="text">INSERIRE I VALORI DESIDERATI E PREMERE SALVA</div>
-   
-      
-
-	 <div class="grid-container" id="gridContainer">
-	 
-	 
-	 </div>
-    <h1>The City</h1>
-    <p>Chania is the capital of the Chania region on the island of Crete. The city can be divided in two parts, the old town and the modern city.</p>
-    <p>Resize the browser window to see how the content respond to the resizing.</p>
-  </div>
 </div>
-
-</body>
-</html>
+		</body>
+	</html>

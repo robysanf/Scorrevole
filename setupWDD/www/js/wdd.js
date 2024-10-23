@@ -1,119 +1,120 @@
 
 function inizia() {
-  send("iniz");
-  
+	send("iniz");
+	
 }
 
 function calcola_encoder() {
-  send("enco");
- 
+	send("enco");
+	
 }
 
 function imposta_pos_zero() {
-  send("pos0");
- 
+	send("pos0");
+	
 }
 
 function imposta_pos_aperto() {
 	
-  send("posA");
- 
+	send("posA");
+	
 }
 
 function calcola_imp() {
 	raggio=document.getElementById("fraggio").value;
 	if(validateNum(raggio))
 	{
-      send("impu"+raggio);
-      
+		send("impu"+raggio);
+		
 	}
 }
 
 function move() {
-  send("move");
- 
+	send("move");
+	
 }
 
 function chiude() {
-  send("moto-");
-  
+	send("moto-");
+	
 }
 
 function apre() {
-  send("moto");
-  
+	send("moto");
+	
 }
 
 function cons() {
 	document.getElementById("fraggio").value;
-  send("cons");
-  
+	send("cons");
+	
 }
 
 function velo() {
-  send("velo");
- 
+	send("velo");
+	
 }
 
 function save(a) {
 	if(a==1)
-	   document.getElementById("CONFIGURAZIONE").value='1';
+	document.getElementById("CONFIGURAZIONE").value='1';
 	send(makeResponseToSave());
-     
+	
 }
 
 
 function apri() {
-  send("apri");
- 
+	send("apri");
+	
 }
 
 function chiudi() {
-  send("chiu");
- 
+	send("chiu");
+	
 }
 
 function stop() {
-  send("stop");
- 
+	send("stop");
+	
 }
 
 function vars() {
-  send("VARS");
- 
+	send("VARS");
+	
 }
 
 function test() {
-  send("TEST");
- 
+	send("TEST");
+	
 }
 
 function set() {
 	makeConfigHtml(last_response);
  	document.getElementById("gridContainer").style.visibility='visible';
- 
+	
 }
 function set_reset() {
-  send("setr");
-  
+	send("setr");
+	
 }
 
 
 function validateNum(x) {
-  let text;
-  if (isNaN(x) || x < 1 || x > 10000) {
-    text = "Input not valid";
-	document.getElementById("message").innerHTML = text;
-    return false;
-  } else {
-	  document.getElementById("message").innerHTML = "";
-    return true;
-  }
-  
+	let text;
+	if (isNaN(x) || x < 1 || x > 10000) {
+		text = "Input not valid";
+		document.getElementById("message").innerHTML = text;
+		return false;
+		} else {
+		document.getElementById("message").innerHTML = "";
+		return true;
+	}
+	
 }
 function removeAllChildNodes(parent) {
     while (parent.firstChild) {
         parent.removeChild(parent.firstChild);
-    }
+	}
 }
-	
+
+
